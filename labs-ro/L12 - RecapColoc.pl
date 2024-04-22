@@ -210,7 +210,8 @@
 %--------------------------------------------------
 %31. Calculați adâncimea unui arbore binar complet/incomplet. 
 %Ex: tree(t(6, t(4, t(2, nil, nil), t(5, nil, nil)), t(9, t(7, nil, nil), nil))). 
-%? – tree(T), depth(T, R). R = 3. 
+%? – tree(T), depth(T, R). 
+%R = 3. 
 
 
 
