@@ -82,8 +82,8 @@ tree1(t(6, t(4, t(2, nil, nil), t(5, nil, nil)), t(9, t(7, nil, nil), nil))).
 inorder(t(K,L,R),List):-
 	inorder(L,ListL),
 	inorder(R,ListR),
-	append1(ListL,[K|ListR],List).
-inorder (nil,[]).
+	append(ListL,[K|ListR],List).
+inorder(nil,[]).
 
 % For difference lists
 % când ajungem la finalul arborelui, unificăm începutul și finalul listei
