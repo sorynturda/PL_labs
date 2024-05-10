@@ -111,8 +111,9 @@ restricted_path(X,Y,LR,P):-
 
 % predicate that verifies the restrictions
 check_restrictions([],_):- !.
-check_restrictions([H|T], [H|R]):- !, check_restrictions(T,R).
-check_restrictions(T, [H|L]):-check_restrictions(T,L).
+check_restrictions([H|TR], [H|TP]):- !, check_restrictions(TR,TP).
+check_restrictions(LR, [_|TP]):-check_restrictions(LR,TP).
+
 
 
 % Follow the execution of:
@@ -177,30 +178,18 @@ path(X,Y,PPath,FPath,LPath):-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %--------------------------------------------------
-% 1. Write the predicate(s) which perform the conversion between the edge-clause representation (A1B2) to the neighbor list-list representation (A2B1).
-% ?- retractall(gen_neighb_list(_,_)), edge_to_neighb, listing(gen_neighb_list/2).
-% true
-
-edge_ex1(a,b).
-edge_ex1(a,c).
-edge_ex1(b,d).
-
-% edge_to_neighb:- % *IMPLEMENTATION HERE* 
-
-
-
-%--------------------------------------------------
-% 2. Continue the implementation of the Hamiltonian Cycle using the hamilton/3 predicate.
+% 1. Continue the implementation of the Hamiltonian Cycle using the hamilton/3 predicate.
 % ?- hamilton(5, a, P).
 % P = [a, e, d, c, b, a]
 
-edge_ex2(a,b).
-edge_ex2(b,c).
-edge_ex2(a,c).
-edge_ex2(c,d).
-edge_ex2(b,d).
-edge_ex2(d,e).
-edge_ex2(e,a).
+edge_ex1(a,b).
+edge_ex1(b,c).
+edge_ex1(a,c).
+edge_ex1(c,d).
+edge_ex1(b,d).
+edge_ex1(d,e).
+edge_ex1(e,a).
+
 
 % hamilton(NumOfNodes, Source, Path)
 hamilton(NN, X, Path):- 
@@ -214,7 +203,92 @@ hamilton(NN, X, Path):-
 
 
 %--------------------------------------------------
-% 3. The restricted_path/4 predicate computes a path between the source and the destination 
+% 2. Write the euler/3 predicate that can find Eulerian paths in a given graf starting from a given source node.
+% ?- euler(5, a, R).
+% R = [[b, a], [e, b], [d, e], [c, d], [a, c]];
+% R = [[c, a], [d, c], [e, d], [b, e], [a, b]]
+
+
+edge_ex2(a,b).
+edge_ex2(b,e).
+edge_ex2(c,a).
+edge_ex2(d,c).
+edge_ex2(e,d).
+
+
+% euler(NE, X, Path):- % *IMPLEMENTATION HERE* 
+
+
+
+
+
+
+%--------------------------------------------------
+% 3. Write a predicate cycle(X,R) to find a closed path (cycle) starting at a given node X in 
+% the graph G (using the edge/2 representation)  and saves the result in R. The predicate should 
+% return all cycles via backtracking.
+% ?- cycle(a, R).
+% R = [a,d,b,a] ;
+% R = [a,e,c,a] ;
+% false
+
+edge_ex3(a,b).
+edge_ex3(a,c).
+edge_ex3(c,e).
+edge_ex3(e,a).
+edge_ex3(b,d).
+edge_ex3(d,a).
+
+
+
+% cycle(X,Path):- % *IMPLEMENTATION HERE* 
+
+
+
+
+
+%--------------------------------------------------
+% 4. Write the cycle(X,R) predicate from the previous exercise using the neighbour/2 representation.
+% ?- cycle_neighb(a, R).
+% R = [a,d,b,a] ;
+% R = [a,e,c,a] ;
+% false
+
+neighb_ex4(a, [b,c]).
+neighb_ex4(b, [d]).
+neighb_ex4(c, [e]).
+neighb_ex4(d, [a]).
+neighb_ex4(e, [a]).
+
+
+% cycle_neighb(X,Path):- % *IMPLEMENTATION HERE* 
+
+
+
+
+
+
+%--------------------------------------------------
+% 5. Write the predicate(s) which perform the conversion between the edge-clause representation (A1B2) to the neighbor list-list representation (A2B1).
+% ?- retractall(gen_neighb(_,_)), edge_to_neighb, listing(gen_neighb/2).
+% true
+
+edge_ex5(a,b).
+edge_ex5(a,c).
+edge_ex5(b,d).
+
+
+:- dynamic gen_neighb/2.
+
+% edge_to_neighb:- % *IMPLEMENTATION HERE* 
+
+
+
+
+
+
+%--------------------------------------------------
+% 6. The restricted_path/4 predicate computes a path between the source and the destination 
 % node, and then checks whether the path found contains the nodes in the restriction list. Since 
 % predicate path used forward recursion, the order of the nodes must be inversed in both lists 
 % – path and restrictions list. Try to motivate why this strategy is not efficient (use trace to 
@@ -225,13 +299,14 @@ hamilton(NN, X, Path):-
 % P = [a, c, d, e];
 % false
 
-edge_ex3(a,b).
-edge_ex3(b,c).
-edge_ex3(a,c).
-edge_ex3(c,d).
-edge_ex3(b,d).
-edge_ex3(d,e).
-edge_ex3(e,a).
+edge_ex6(a,b).
+edge_ex6(b,c).
+edge_ex6(a,c).
+edge_ex6(c,d).
+edge_ex6(b,d).
+edge_ex6(d,e).
+edge_ex6(e,a).
+
 
 % restricted_path_efficient(X,Y,LR,Path):- % *IMPLEMENTATION HERE* 
 
@@ -239,72 +314,30 @@ edge_ex3(e,a).
 
 
 
+
+
+
 %--------------------------------------------------
-% 4. Rewrite the optimal_path/3 predicate such that it operates on weighted graphs: attach a 
+% 7. Rewrite the optimal_path/3 predicate such that it operates on weighted graphs: attach a 
 % weight to each edge on the graph and compute the minimum cost path from a source node to a 
 % destination node. 
 % ?- optimal_weighted_path(a, e, P).
 % P = [e, b, a]
 
-edge_ex4(a,c,7).
-edge_ex4(a,b,10).
-edge_ex4(c,d,3).
-edge_ex4(b,e,1).
-edge_ex4(d,e,2).
+edge_ex7(a,c,7).
+edge_ex7(a,b,10).
+edge_ex7(c,d,3).
+edge_ex7(b,e,1).
+edge_ex7(d,e,2).
+
 
 % opt_weight_path(a, e, P):- % *IMPLEMENTATION HERE* 
 
 
 
-%--------------------------------------------------
-% 5. Write a predicate cycle(X,R) to find a closed path (cycle) starting at a given node X in 
-% the graph G (using the edge/2 representation)  and saves the result in R. The predicate should 
-% return all cycles via backtracking.
-% ?- cycle(a, R).
-% R = [a,d,b,a] ;
-% R = [a,e,c,a] ;
-% false
-
-edge_ex5(a,b).
-edge_ex5(a,c).
-edge_ex5(c,e).
-edge_ex5(e,a).
-edge_ex5(b,d).
-edge_ex5(d,a).
-
-
-% cycle(X,Path):- % *IMPLEMENTATION HERE* 
 
 
 
-%--------------------------------------------------
-% 6. Write the cycle(X,R) predicate from the previous exercise using the neighbour/2 representation.
-% ?- cycle_neighb(a, R).
-% R = [a,d,b,a] ;
-% R = [a,e,c,a] ;
-% false
-
-neighb_ex6(a, [b,c]).
-neighb_ex6(b, [d]).
-neighb_ex6(c, [e]).
-neighb_ex6(d, [a]).
-neighb_ex6(e, [a]).
-
-% cycle_neighb(X,Path):- % *IMPLEMENTATION HERE* 
-
-
-
-
-
-%--------------------------------------------------
-% 7. Write the euler/3 predicate that can find Eulerian paths in a given graf starting from a given source node.
-% ?- euler(a, R).
-% R = [[b, a], [e, b], [d, e], [c, d], [a, c]];
-% R = [[c, a], [d, c], [e, d], [b, e], [a, b]]
-
-
-
-% euler(NE, X, Path):- % *IMPLEMENTATION HERE* 
 
 
 

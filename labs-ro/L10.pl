@@ -116,8 +116,9 @@ restricted_path(X,Y,LR,P):-
 
 % predicate that verifies the restrictions
 check_restrictions([],_):- !.
-check_restrictions([H|T], [H|R]):- !, check_restrictions(T,R).
-check_restrictions(T, [H|L]):-check_restrictions(T,L).
+check_restrictions([H|TR], [H|TP]):- !, check_restrictions(TR,TP).
+check_restrictions(LR, [_|TP]):-check_restrictions(LR,TP).
+
 
 
 % Urmărește execuția la:
@@ -183,30 +184,19 @@ path(X,Y,PPath,FPath,LPath):-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %--------------------------------------------------
-% 1. Scrieți un predicat care convertește din A1B2 (edge-clause) în A2B2 (neighbor list-clause).
-% ?- retractall(gen_neighb_list(_,_)), edge_to_neighb, listing(gen_neighb_list/2).
-% true
-
-edge_ex1(a,b).
-edge_ex1(a,c).
-edge_ex1(b,d).
-
-% edge_to_neighb:- % *IMPLEMENTAȚI AICI*
-
-
-%--------------------------------------------------
-% 2. Continuă implementarea la ciclul Hamiltonian folosind predicatul hamilton/3.
+% 1. Continuă implementarea la ciclul Hamiltonian folosind predicatul hamilton/3.
 
 % ?- hamilton(5, a, P).
 % P = [a, e, d, c, b, a]
 
-edge_ex2(a,b).
-edge_ex2(b,c).
-edge_ex2(a,c).
-edge_ex2(c,d).
-edge_ex2(b,d).
-edge_ex2(d,e).
-edge_ex2(e,a).
+edge_ex1(a,b).
+edge_ex1(b,c).
+edge_ex1(a,c).
+edge_ex1(c,d).
+edge_ex1(b,d).
+edge_ex1(d,e).
+edge_ex1(e,a).
+
 
 % hamilton(NumOfNodes, Source, Path)
 hamilton(NN, X, Path):- 
@@ -218,9 +208,93 @@ hamilton(NN, X, Path):-
 
 
 
+%--------------------------------------------------
+% 2. Scrieți predicatul euler/3 care poate să găsească drumuri Euleriane într-un graf dat de la un nod dat. 
+% ?- euler(5, a, R).
+% R = [[b, a], [e, b], [d, e], [c, d], [a, c]];
+% R = [[c, a], [d, c], [e, d], [b, e], [a, b]]
+
+edge_ex2(a,b).
+edge_ex2(b,e).
+edge_ex2(c,a).
+edge_ex2(d,c).
+edge_ex2(e,d).
+
+
+% euler(NE, X, Path):- % *IMPLEMENTAȚI AICI*
+
+
+
+
+
 
 %--------------------------------------------------
-% 3. Predicatul restricted_path/4 găsește un drum între nodul sursă și cel
+% 3. Scrie predicatul cycle(X,R) care găsește un ciclu ce pornește din nodul X dintrun graf G 
+% (folosind reprezentarea edge/2) și pune rezultatul în R. Predicatul trebuie să returneze toate 
+% ciclurile prin backtracking.
+% ?- cycle(a, R).
+% R = [a,d,b,a] ;
+% R = [a,e,c,a] ;
+% false
+
+edge_ex3(a,b).
+edge_ex3(a,c).
+edge_ex3(c,e).
+edge_ex3(e,a).
+edge_ex3(b,d).
+edge_ex3(d,a).
+
+
+
+% cycle(X,Path):- % *IMPLEMENTAȚI AICI*
+
+
+
+
+
+
+%--------------------------------------------------
+% 4. Scrieți predicatul cycle(X,R) din exercițiul anterior folosind reprezentarea neighbour/2.
+% ?- cycle_neighb(a, R).
+% R = [a,d,b,a] ;
+% R = [a,e,c,a] ;
+% false
+
+neighb_ex4(a, [b,c]).
+neighb_ex4(b, [d]).
+neighb_ex4(c, [e]).
+neighb_ex4(d, [a]).
+neighb_ex4(e, [a]).
+
+
+% cycle_neighb(X,Path):- % *IMPLEMENTAȚI AICI*
+
+
+
+
+
+
+%--------------------------------------------------
+% 5. Scrieți un predicat care convertește din A1B2 (edge-clause) în A2B2 (neighbor list-clause).
+% ?- retractall(gen_neighb_list(_,_)), edge_to_neighb, listing(gen_neighb_list/2).
+% true
+
+edge_ex5(a,b).
+edge_ex5(a,c).
+edge_ex5(b,d).
+
+
+:- dynamic gen_neighb/2.
+
+% edge_to_neighb:- % *IMPLEMENTAȚI AICI*
+
+
+
+
+
+
+%--------------------------------------------------
+% 6. Predicatul restricted_path/4 găsește un drum între nodul sursă și cel
 % destinație și verifică dacă drumul găsit conține nodurile din lista de restricții.
 % Acest predicat folosește recursivitate înainte, ordinea nodurilor trebuie
 % inversată în ambele liste – lista de drum și de restricții. Motivați de ce această
@@ -231,13 +305,14 @@ hamilton(NN, X, Path):-
 % P = [a, c, d, e];
 % false
 
-edge_ex3(a,b).
-edge_ex3(b,c).
-edge_ex3(a,c).
-edge_ex3(c,d).
-edge_ex3(b,d).
-edge_ex3(d,e).
-edge_ex3(e,a).
+edge_ex6(a,b).
+edge_ex6(b,c).
+edge_ex6(a,c).
+edge_ex6(c,d).
+edge_ex6(b,d).
+edge_ex6(d,e).
+edge_ex6(e,a).
+
 
 % restricted_path_efficient(X,Y,LR,Path):- % *IMPLEMENTAȚI AICI*
 
@@ -245,72 +320,28 @@ edge_ex3(e,a).
 
 
 
+
 %--------------------------------------------------
-% 4. Rescrie optimal_path/3 astfel încât să funcționeze pe grafuri ponderate:
+% 7. Rescrie optimal_path/3 astfel încât să funcționeze pe grafuri ponderate:
 % atașați o pondere pentru fiecare muchie din graf și calculați drumul de cost
 % minim dintr-un nod sursă la un nod destinație.
 % ?- optimal_weighted_path(a, e, P).
 % P = [e, b, a]
 
-edge_ex4(a,c,7).
-edge_ex4(a,b,10).
-edge_ex4(c,d,3).
-edge_ex4(b,e,1).
-edge_ex4(d,e,2).
+edge_ex7(a,c,7).
+edge_ex7(a,b,10).
+edge_ex7(c,d,3).
+edge_ex7(b,e,1).
+edge_ex7(d,e,2).
+
 
 % opt_weight_path(a, e, P):- % *IMPLEMENTAȚI AICI*
 
 
 
-%--------------------------------------------------
-% 5. Scrie predicatul cycle(X,R) care găsește un ciclu ce pornește din nodul X dintrun graf G 
-% (folosind reprezentarea edge/2) și pune rezultatul în R. Predicatul trebuie să returneze toate 
-% ciclurile prin backtracking.
-% ?- cycle(a, R).
-% R = [a,d,b,a] ;
-% R = [a,e,c,a] ;
-% false
-
-edge_ex5(a,b).
-edge_ex5(a,c).
-edge_ex5(c,e).
-edge_ex5(e,a).
-edge_ex5(b,d).
-edge_ex5(d,a).
-
-
-% cycle(X,Path):- % *IMPLEMENTAȚI AICI*
 
 
 
-%--------------------------------------------------
-% 6. Scrieți predicatul cycle(X,R) din exercițiul anterior folosind reprezentarea neighbour/2.
-% ?- cycle_neighb(a, R).
-% R = [a,d,b,a] ;
-% R = [a,e,c,a] ;
-% false
-
-neighb_ex6(a, [b,c]).
-neighb_ex6(b, [d]).
-neighb_ex6(c, [e]).
-neighb_ex6(d, [a]).
-neighb_ex6(e, [a]).
-
-% cycle_neighb(X,Path):- % *IMPLEMENTAȚI AICI*
-
-
-
-
-
-%--------------------------------------------------
-% 7. Scrieți predicatul euler/3 care poate să găsească drumuri Euleriane într-un graf dat de la un nod dat. 
-% ?- euler(a, R).
-% R = [[b, a], [e, b], [d, e], [c, d], [a, c]];
-% R = [[c, a], [d, c], [e, d], [b, e], [a, b]]
-
-
-
-% euler(NE, X, Path):- % *IMPLEMENTAȚI AICI*
 
 
 
