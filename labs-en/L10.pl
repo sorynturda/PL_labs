@@ -73,6 +73,18 @@ neighb_to_edge_v2:-
 neighb_to_edge_v2.
 
 
+% Variant 3, recursion without retract
+:-dynamic seen/1. 
+
+neighb_to_edge_v3:-
+    neighbor(Node,List), 
+    not(seen(Node)),!,
+    assert(seen(Node)),
+    process(Node,List),
+    neighb_to_edge_v3.
+neighb_to_edge_v3. 
+
+
 %--------------------------------------------------
 % The PATH predicate %
 %--------------------------------------------------

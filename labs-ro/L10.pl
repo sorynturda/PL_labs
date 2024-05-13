@@ -67,12 +67,25 @@ process(Node, []):- assertz(gen_node(Node)).
 % ?- retractall(gen_edge(_,_)), neighb_to_edge, listing(gen_edge/2).
 
 
-% Variant 2, folosind failure-driven loops
+% Varianta 2, folosind failure-driven loops
 neighb_to_edge_v2:-
     neighbor(Node,List), % access the fact
     process(Node,List),
     fail.
 neighb_to_edge_v2.
+
+
+
+% Variant 3, recursivitate fara retract
+:-dynamic seen/1. 
+
+neighb_to_edge_v3:-
+    neighbor(Node,List), 
+    not(seen(Node)),!,
+    assert(seen(Node)),
+    process(Node,List),
+    neighb_to_edge_v3.
+neighb_to_edge_v3. 
 
 
 %--------------------------------------------------
