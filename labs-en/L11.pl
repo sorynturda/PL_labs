@@ -161,7 +161,7 @@ is_target(Target),
 
 %--------------------------------------------------
 % 1. Modify the DFS predicate such that it searches nodes only to a given depth (DLS – Depth-Limited Search). Set the depth limit via a predicate, depth_max(2). for example.
-% ?- d_search(a,DFS), dl_search(a, DLS).
+% ?- dfs(a,DFS), dls(a, DLS).
 % DFS = [a, b, d, e, g, c, f, h],
 % DLS = [a, b, d, c, f].
 
@@ -173,5 +173,5 @@ edge_ex1(c,f).
 edge_ex1(e,g).
 edge_ex1(f,h).
 
-% dl_search(X, R):- % *IMPLEMENTATION HERE* 
+% dls(X, R):- % *IMPLEMENTATION HERE* 
  

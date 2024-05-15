@@ -164,7 +164,7 @@ is_target(Target),
 
 %--------------------------------------------------
 % 1. Modificați predicatul DFS astfel încât să caute noduri numai până la o anumită adâncime (DLS – Depth-Limited Search). Setați limita de adâncime printr-un predicat, depth_max(2). de exemplu.
-% ?- d_search(a,DFS), dl_search(a, DLS).
+% ?- dfs(a,DFS), dls(a, DLS).
 % DFS = [a, b, d, e, g, c, f, h],
 % DLS = [a, b, d, c, f].
 
@@ -176,5 +176,5 @@ edge_ex1(c,f).
 edge_ex1(e,g).
 edge_ex1(f,h).
 
-% dl_search(X, R):- % *IMPLEMENTAȚI AICI*
+% dls(X, R):- % *IMPLEMENTAȚI AICI*
  
