@@ -3,13 +3,13 @@
 %%%%%% Graphs Search Algorithms (DFS & BFS) %%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-edge(a,b).
-edge(a,c).
-edge(b,d).
-edge(d,e).
-edge(c,f).
-edge(e,g).
-edge(f,h).
+edge(1,2).
+edge(1,5).
+edge(2,3).
+edge(2,5).
+edge(3,4).
+edge(4,5).
+edge(4,6).
 
 
 %--------------------------------------------------
@@ -17,7 +17,7 @@ edge(f,h).
 %--------------------------------------------------
 :- dynamic visited_node/1.
 
-% d_search(Source, Path)
+% dfs(Source, Path)
 dfs(X,_) :- df_search(X). % traversal of nodes
 % when traversal is finished, collection starts
 dfs(_,L) :- !, collect_reverse([], L). % collecting results
@@ -48,8 +48,8 @@ collect_reverse(L,L).
 
 
 % Follow the execution of:
-% ?- dfs(a,R).
-
+% ?- dfs(1,R).
+% R = [1, 2, 3, 4, 5, 6].
 
 
 
@@ -59,7 +59,7 @@ collect_reverse(L,L).
 :- dynamic visited_node/1.
 :- dynamic queue/1.   % the queue stores the nodes that need to be expanded
 
-% b_search(Source, Path)
+% bfs(Source, Path)
 bfs(X, _):- % traversal of nodes
     assertz(visited_node(X)), % add source as visited
     assertz(queue(X)), % add source as first element in queue
@@ -82,8 +82,8 @@ expand(X):-
 expand(_).
 
 % Follow the execution of:
-% ?- bfs(a,R).
-
+% ?- bfs(1,R).
+% R = [1, 2, 5, 3, 4, 6].
 
 
 %--------------------------------------------------

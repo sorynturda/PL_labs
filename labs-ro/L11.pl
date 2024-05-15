@@ -3,13 +3,13 @@
 %%%%%% Algoritmi de traversare a grafurilor %%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-edge(a,b).
-edge(a,c).
-edge(b,d).
-edge(d,e).
-edge(c,f).
-edge(e,g).
-edge(f,h).
+edge(1,2).
+edge(1,5).
+edge(2,3).
+edge(2,5).
+edge(3,4).
+edge(4,5).
+edge(4,6).
 
 
 %--------------------------------------------------
@@ -17,7 +17,7 @@ edge(f,h).
 %--------------------------------------------------
 :- dynamic nod_vizitat/1.
 
-% d_search(Source, Path)
+% dfs(Source, Path)
 dfs(X,_) :- df_search(X). % parcurgerea nodurilor
 % când parcurgerea se termină, începe colectarea
 dfs(_,L) :- !, collect_reverse([], L). % colectarea rezultatelor
@@ -49,7 +49,8 @@ collect_reverse(L,L).
 
 
 % Urmărește execuția la:
-% ?- dfs(a,R).
+% ?- dfs(1,R).
+% R = [1, 2, 3, 4, 5, 6].
 
 
 
@@ -60,7 +61,7 @@ collect_reverse(L,L).
 :- dynamic nod_vizitat/1.
 :- dynamic coada/1. 	% coada reține nodurile care trebuie expandate
 
-% b_search(Source, Path)
+% bfs(Source, Path)
 bfs(X, _):- % parcurgerea nodurilor
     assertz(nod_vizitat(X)), % adăugăm sursa ca nod vizitat
     assertz(coada(X)), % adăugăm sursa în coadă
@@ -83,8 +84,8 @@ expand(_).
 
 
 % Urmărește execuția la:
-% ?- bfs(a,R).
-
+% ?- bfs(1,R).
+% R = [1, 2, 5, 3, 4, 6].
 
 
 %--------------------------------------------------
