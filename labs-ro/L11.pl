@@ -11,6 +11,8 @@ edge(3,4).
 edge(4,5).
 edge(4,6).
 
+is_edge(X,Y):- edge(X,Y);edge(Y,X).
+
 
 %--------------------------------------------------
 % Predicatul DFS %
