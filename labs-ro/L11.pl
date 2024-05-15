@@ -30,7 +30,7 @@ df_search(X):-
     asserta(nod_vizitat(X)),
     % luăm un prim edge de la X la un Y
     % restul le vom găsi prin backtracking
-    edge(X,Y),
+    is_edge(X,Y),
     % verificăm daca acest Y a fost deja vizitat
     not(nod_vizitat(Y)),
     % dacă nu a fost -  de aceea avem nevoie de negare – 
@@ -76,7 +76,7 @@ bf_search:-
     bf_search. % recursivitate
 	
 expand(X):-	
-    edge(X,Y), % găsim un nod Y cu o muchie la X-ul dat
+    is_edge(X,Y), % găsim un nod Y cu o muchie la X-ul dat
     not(nod_vizitat(Y)), % verificăm daca Y a fost vizitat
     asserta(nod_vizitat(Y)), % adăugăm Y la nodurile vizitate
     assertz(coada(Y)), % adăugam Y în coadă pentru a fi expandat 

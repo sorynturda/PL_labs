@@ -30,7 +30,7 @@ df_search(X):-
     asserta(visited_node(X)),
     % take the first edge from X to a Y
     % the rest are found through backtracking
-    edge(X,Y),
+    is_edge(X,Y),
     % check if this Y was already visited
     not(visited_node(Y)),
     % if it was not -this is why the negation is needed – 
@@ -74,7 +74,7 @@ bf_search:-
     bf_search. % recursion
 
 expand(X):-	
-    edge(X,Y), % find a node Y linked to given X
+    is_edge(X,Y), % find a node Y linked to given X
     not(visited_node(Y)), % check if Y was already visited
     % if Y was not visited before
     asserta(visited_node(Y)), % add Y to visited nodes
