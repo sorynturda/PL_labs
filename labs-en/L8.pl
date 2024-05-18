@@ -107,7 +107,7 @@ delete_it(Key, t(K,L,R), t(K,L,NR)):- delete_it(Key,R,NR).
 
 % searches for the predecessor node
 get_pred(t(Pred, L, R), Pred, L):- var(R), !.
-get_pred(t(Key, L, R), Pred, t(Key, L, NR)):- get_pred(R, Pred, NR)
+get_pred(t(Key, L, R), Pred, t(Key, L, NR)):- get_pred(R, Pred, NR).
 
 % Follow the execution of:
 % ?- T=t(7, t(5, t(3,_,_), t(6,_,_)), t(11,_,_)), delete_it(6, T, R).
