@@ -178,3 +178,36 @@ edge_ex1(f,h).
 
 % dls(X, R):- % *IMPLEMENTAȚI AICI*
  
+ 
+ 
+ 
+ 
+% 2.	Având următoarea secvență de cod în Prolog care implementează algoritmul BFS fără efecte laterale:
+% 2.1.	Modificați astfel încât să nu necesite utilizarea predicatului reverse (spre exemplu, prin folosirea listelor diferență).
+% 2.2.	Modificați astfel încât să funcționeze pe reprezentarea de edge în loc de reprezentarea de neighbor.
+% ?- bfs(a, R).
+% R = [a, b, c, d, e].
+
+neighbor(a, [b,c]).
+neighbor(b, [a,d]).
+neighbor(c, [a,e]).
+neighbor(d, [b]).
+neighbor(e, [c]).
+
+
+bfs1(X, R) :-
+    bfs1([X], [], P), reverse(P, R).
+
+bfs1([], V, V).
+bfs1([X|Q], V, R):- 
+    \+member(X, V),
+    neighbor(X, Ns),
+    remove_visited(Ns, V, RemNs),
+    append(Q, RemNs, NewQ),
+    bfs1(NewQ, [X|V], R).
+
+remove_visited([], _, []).
+remove_visited([H|T], V, [H|R]):- \+member(H, V), !, remove_visited(T, V, R).
+remove_visited([_|T], V, R):- remove_visited(T, V, R).
+
+
