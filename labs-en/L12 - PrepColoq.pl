@@ -20,7 +20,7 @@
 
 
 %3.	Compute the divisors of a natural number. 
-%?- divisor(15,R1), divisor(2,R2), divisor(1,R3), divisor(0,R4),divisor(¬6,R5). 
+%?- divisor(15,R1), divisor(2,R2), divisor(1,R3), divisor(0,R4),divisor(6,R5). 
 %R1 = [1,3,5,15], R2 = [1,2], R3 = [1], R4 = alot, R5 = [1,2,3,6]. 
 
 
@@ -82,7 +82,7 @@
 
 
 
-%12. Delete each k¬th element from the list. 
+%12. Delete each k-th element from the list. 
 %?- delete_kth([6,5,4,3,2,1], 3, R). 
 %R = [6,5,3,2]. 
 
@@ -169,13 +169,13 @@
 % 3	Deep Lists %
 %--------------------------------------------------
 %25. Compute the maximum depth of a deep list.
-%?- depth([1, [2, [3]], [4]], R1), depth ([], R2). 
+%?- depth_list([1, [2, [3]], [4]], R1), depth_list([], R2). 
 %R1 = 3, R2 = 1. 
 
 
 
 %26. Flatten a deep list with incomplete lists. 
-%?- flat([[1|_], 2, [3, [4, 5|_]|_]|_], R). 
+%?- flatten([[1|_], 2, [3, [4, 5|_]|_]|_], R). 
 %R = [1,2,3,4,5|_]. 
 
 
@@ -216,98 +216,111 @@
 % 4	Trees %
 %--------------------------------------------------
 %32. Compute the depth of a binary complete/incomplete tree.
-%tree(t(6, t(4, t(2, nil, nil), t(5, nil, nil)), t(9, t(7, nil, nil), nil))). 
-%?- tree(T), depth(T, R). 
+%?- tree_ex32(T), depth_tree(T, R). 
 %R = 3. 
+
+tree_ex32(t(6, t(4, t(2, nil, nil), t(5, nil, nil)), t(9, t(7, nil, nil), nil))). 
 
 
 
 %33. Collect all nodes of binary complete/incomplete tree in inorder using complete lists.
-%tree(t(6, t(4, t(2, nil, nil), t(5, nil, nil)), t(9, t(7, nil, nil), nil))). 
-%?- tree(T), inordine(T, R). 
+%?- tree_ex33(T), inorder(T, R). 
 %R = [2,4,5,6,7,9]. 
+
+tree_ex33(t(6, t(4, t(2, nil, nil), t(5, nil, nil)), t(9, t(7, nil, nil), nil))). 
 
 
 
 %34. Collect all leaves of a binary tree.
-%tree(t(6, t(4, t(2, nil, nil), t(5, nil, nil)), t(9, t(7, nil, nil), nil))). 
-%?- tree(T), collect_k(T, R). 
+%?- tree_ex34(T), collect_k(T, R). 
 %R = [2,5,7]. 
+
+tree_ex34(t(6, t(4, t(2, nil, nil), t(5, nil, nil)), t(9, t(7, nil, nil), nil))). 
 
 
 
 %35. Write a predicate which checks whether the tree is a binary search tree.
-%tree(t(3, t(2, t(1, nil, nil), t(4, nil, nil)), t(5, nil, nil))). 
-%?- tree(T), is_bst(T). 
+%?- tree_ex35(T), is_bst(T). 
 %false.
+
+tree_ex35(t(3, t(2, t(1, nil, nil), t(4, nil, nil)), t(5, nil, nil))). 
 
 
 
 %36. Binary incomplete tree. Collect odd nodes with 1 child in an incomplete list. 
-%tree(t(26,t(14,t(2,_,_),t(15,_,_)),t(50,t(35,t(29,_,_),_),t(51,_,t(58,_,_))))). 
-%?- tree(X), collect_odd_from_1child(X,R). 
-%R = [35, 51|_]. 
+%?- tree_ex36(X), collect_odd_from_1child(X,R). 
+%R = [35, 51|_].  
+
+tree_ex36(t(26,t(14,t(2,_,_),t(15,_,_)),t(50,t(35,t(29,_,_),_),t(51,_,t(58,_,_))))). 
 
 
 
 %37. Ternary incomplete tree. Collect the keys between X and Y (closed interval) in a difference list. 
-%tree(t(2,t(8,_,_,_),t(3,_,_,t(4,_,_,_)),t(5,t(7,_,_,_),t(6,_,_,_),t(1,_,_,t(9,_,_,_))))). 
-%?- tree(T), collect_between(T,2,7,R,[1,18]). 
+%?- tree_ex37(T), collect_between(T,2,7,R,[1,18]). 
 %R = [2,3,4,5,6,7,1,18]. 
+
+tree_ex37(t(2,t(8,_,_,_),t(3,_,_,t(4,_,_,_)),t(5,t(7,_,_,_),t(6,_,_,_),t(1,_,_,t(9,_,_,_))))). 
 
 
 
 %38. Binary Tree. Collect even keys from leaves in a difference list.
-%tree(t(5,t(10,t(7,nil,nil),t(10,t(4,nil,nil),t(3,nil,t(2,nil,nil)))),t(16,nil,nil))). 
-%?-  tree(T), collect_even_from_leaf(T,R,[1]). 
+%?-  tree_ex38(T), collect_even_from_leaf(T,R,[1]). 
 %R = [4,2,16,1]. 
+
+tree_ex38(t(5,t(10,t(7,nil,nil),t(10,t(4,nil,nil),t(3,nil,t(2,nil,nil)))),t(16,nil,nil))).
 
 
 
 %39. Replace the min element from a ternary incomplete tree with the root. 
-%tree(t(2,t(8,_,_,_),t(3,_,_,t(1,_,_,_)),t(5,t(7,_,_,_),t(6,_,_,_),t(1,_,_,t(9,_,_,_))))). 
-%?- tree(T), replace_min(T,R). 
+%?- tree_ex39(T), replace_min(T,R). 
 %R = t(2,t(8,_,_,_),t(3,_,_,t(2,_,_,_)),t(5,t(7,_,_,_),t(6,_,_,_),t(2,_,_,t(9,_,_,_))))  
 
+tree_ex39(t(2,t(8,_,_,_),t(3,_,_,t(1,_,_,_)),t(5,t(7,_,_,_),t(6,_,_,_),t(1,_,_,t(9,_,_,_))))). 
 
 
 %40. Collect all nodes from depth K in a binary tree.
-%Ex: tree(t(6, t(4, t(2, nil, nil), t(5, nil, nil)), t(9, t(7, nil, nil), nil))). 
-%?- tree(T), collect_k(T, 2, R). 
+%?- tree_ex40(T), collect_k(T, 2, R). 
 %R = [4, 9]. 
+
+tree_ex40(t(6, t(4, t(2, nil, nil), t(5, nil, nil)), t(9, t(7, nil, nil), nil))).
 
 
 
 %41. Collect all the nodes at odd depth from a binary incomplete tree (the root has depth 0). 
-%tree(t(26,t(14,t(2,_,_),t(15,_,_)),t(50,t(35,t(29,_,_),_),t(51,_,t(58,_,_))))). 
-%?- tree(X), collect_all_odd_depth(X,R). 
+%?- tree_ex41(X), collect_all_odd_depth(X,R). 
 %R = [14,50,29,58]. 
+
+tree_ex41(t(26,t(14,t(2,_,_),t(15,_,_)),t(50,t(35,t(29,_,_),_),t(51,_,t(58,_,_))))). 
+
 
 
 %42. Collect the subtrees having the median value from a ternary incomplete tree. 
 %Note. The median is the "middle" of the sorted list of keys.
-%tree(t(2,t(8,_,_,_),t(3,_,_,t(1,_,_,_)),t(5,t(7,_,_,_),t(5,_,_,_),t(1,_,_,t(9,_,_,_))))). 
-%?- tree(T), median(T,R). 
+%?- tree_ex42(T), median(T,R). 
 %R = [
-%t(5,t(7,_,_,_),t(5,_,_,_),t(1,_,_,t(9,_,_,_)))), 
-%t(5,_,_,_)
+%	t(5,t(7,_,_,_),t(5,_,_,_),t(1,_,_,t(9,_,_,_)))), 
+%	t(5,_,_,_)
 %].
+
+tree_ex42(t(2,t(8,_,_,_),t(3,_,_,t(1,_,_,_)),t(5,t(7,_,_,_),t(5,_,_,_),t(1,_,_,t(9,_,_,_))))). 
+
 
 
 
 %43. Replace each node with its height in a binary incomplete tree (a leaf has height 0). 
-%tree(t(2,t(4,t(5,_,_),t(7,_,_)),t(3,t(0,t(4,_,_),_),t(8,_,t(5,_,_))))). 
-%?-  tree(T), height_each(T,R). 
-%R = tree(t(3,t(1,t(0,_,_),t(0,_,_)),t(2,t(1,t(0,_,_),_),t(1,_,t(0,_,_))))). 
+%?- tree_ex43(T), height_each(T,R). 
+%R = tree_ex43(t(3,t(1,t(0,_,_),t(0,_,_)),t(2,t(1,t(0,_,_),_),t(1,_,t(0,_,_))))). 
 
+tree_ex43(t(2,t(4,t(5,_,_),t(7,_,_)),t(3,t(0,t(4,_,_),_),t(8,_,t(5,_,_))))). 
 
 
 %44. Write a predicate which replaces the entire subtree of a node (whose key is given 
 % as argument) with a single node having as key the sum of the keys in the subtree of 
 % that node (if there is no such node in the tree, leave the structure unchanged).
-%tree(t(14,t(6,t(4,nil,nil),t(12,t(10,nil,nil),nil)),t(17,t(16,nil,nil),t(20,nil,nil)))).
-%?-  tree(T), sum_subtree(T,6,R). 
+%?- tree_ex44(T), sum_subtree(T,6,R). 
 %R = t(14,t(32,nil,nil),t(17,t(16,nil,nil),t(20,nil,nil)))).
+
+tree_ex44(t(14,t(6,t(4,nil,nil),t(12,t(10,nil,nil),nil)),t(17,t(16,nil,nil),t(20,nil,nil)))).
 
 
 
@@ -321,8 +334,20 @@
 %R = [1,2,3].
 
 
+node(1). 
+node(2). 
+node(3). 
+
+
 
 %46. Compute the indegree and the outdegree for each node in a graph using the dynamic predicate info(Node, OutDegree, InDegree). 
-%edge(1,2). edge(2,1). edge(1,4). edge(1,3). edge(3,2). 
+%Ex: edge(1,2). edge(2,1). edge(1,4). edge(1,3). edge(3,2). 
 %=> info(1,3,1). info(2,1,2). info(3,1,1). info(4,0,1).
+
+edge(1,2).
+edge(2,1).
+edge(1,4).
+edge(1,3).
+edge(3,2). 
+
 
