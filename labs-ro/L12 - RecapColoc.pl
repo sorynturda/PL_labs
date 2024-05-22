@@ -57,7 +57,7 @@
 
 
 
-%8.	Extrageți numerele pare în E și numerele impare în O (indecșii încep de la 1). 
+%8.	Extrageți numerele pare în E și numerele impare în O (indexarea începe de la 1). 
 %?- separate([1,2,2,3,4,5,6,6,12,44,8,5,5,10,5],Even,Rest). 
 %Even = [2,4,6,12,8], Rest = [1,2,3,6,44,5,5,10,5]. 
 
@@ -76,7 +76,7 @@
 
 
 
-%11. Sțergeți aparițiile lui X pe poziții pare (numerotatea poziției începe de la 1)
+%11. Sțergeți aparițiile lui X pe poziții pare (indexarea începe de la 1)
 %?- delete_pos_even([1,2,3,4,2,3,3,2,5],2,R). 
 %R = [1,3,4,2,3,3,5]. 
 
@@ -157,7 +157,7 @@
 
 
 
-%24. Stergeți elementele duplicate de pe poziții impare dintr-o listă (indecșii încep de la 1). 
+%24. Stergeți elementele duplicate de pe poziții impare dintr-o listă (indexarea începe de la 1). 
 %?- remove_dup_on_odd_pos([1,2,3,1,3,3,3,9,10,6,10,8,7,3],R). 
 %R = [2,1,3,9,6,8,7,3]. 
 
