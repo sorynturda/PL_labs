@@ -45,7 +45,7 @@ mortal(X):- human(X).
 
 % first we take the height of X, then we take the height of Y
 % and finally we compare the heights through the inequality
-taller(X,Y) :- height(X,Hx), height (Y,Hy), Hx>Hy.
+taller(X,Y) :- height(X,Hx), height(Y,Hy), Hx>Hy.
 
 
 % the path between nodes X and Y can be a direct connection between
@@ -75,7 +75,7 @@ birthday(maria).
 birthday(adriana).
 happy(ana).
 happy(george).
-happy(adriana)
+happy(adriana).
 
 % Queries %
 % Follow these queries:
