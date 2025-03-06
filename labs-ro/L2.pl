@@ -88,9 +88,9 @@ fact_fwd(N,F) :- fact_fwd(N,1,F). % the accumulator is initialized with 1
 % Z=24;
 % false.
 
-% cmmc(X, Y, Z). - calculeză cel mai mic multiplu comun dintre X și Y și returneză rezultatul în Z
+% cmmmc(X, Y, Z). - calculeză cel mai mic multiplu comun dintre X și Y și returneză rezultatul în Z
 
-% cmmmc(X, Y, Z):-  % *IMPLEMENTAȚI AICI*
+cmmmc(X, Y, Z):-  Prod is X*Y, cmmdc1(X,Y,R), Z is Prod/R.
 
 
 
@@ -107,7 +107,9 @@ fact_fwd(N,F) :- fact_fwd(N,1,F). % the accumulator is initialized with 1
 
 % triangle(A, B, C). – va verifica dacă A,B,C ar putea fi laturile unui triunghi și va returna true sau false
 
-% triangle(A, B, C):-  % *IMPLEMENTAȚI AICI*
+triangle(A, B, C):- 
+					A>0,B>0,C>0,
+					C<A+B, B<A+C, A<B+C.
 
 
 
@@ -129,7 +131,19 @@ fact_fwd(N,F) :- fact_fwd(N,1,F). % the accumulator is initialized with 1
 % solve(A, B, C, X). – va rezolva ecuația pătratică A*x2+B*x+C = 0
 % și va returna rezultatul(ele) în X sau false altfel
 
-% solve(A, B, C, X):-  % *IMPLEMENTAȚI AICI*
+sol(A, B, 0, X) :- X is -B/(2*A).
+sol(A, B, Delta, X) :-
+					Delta>0,
+					X is (-B+sqrt(Delta))/(2*A).
+sol(A, B, Delta, X) :-
+					Delta>0,
+					X is (-B-sqrt(Delta))/(2*A).
+
+
+solve(A, B, C, X):- 
+			Delta is B^2-4*A*C,
+			sol(A, B, Delta, X).
+
 
 
 
@@ -152,7 +166,8 @@ fact_fwd(N,F) :- fact_fwd(N,1,F). % the accumulator is initialized with 1
 
 % power_fwd(X, Y, Z):-   % *IMPLEMENTAȚI AICI*
 
-% power_bwd(X, Y, Z):-   % *IMPLEMENTAȚI AICI*
+power_bwd(X, 0, )
+power_bwd(X, Y, Z):- 
 
 
 
