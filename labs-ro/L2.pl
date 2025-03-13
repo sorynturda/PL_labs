@@ -166,10 +166,12 @@ solve(A, B, C, X):-
 
 % power_fwd(X, Y, Z):-   % *IMPLEMENTAȚI AICI*
 
-power_bwd(X, 0, )
-power_bwd(X, Y, Z):- 
+power_bwd(_, 0, 1).
+power_bwd(X, Y, Z):- Y > 0, Y1 is Y-1, power_bwd(X, Y1, Z1), Z is X*Z1.
 
-
+power_fwd(_,0, Acc, Acc).
+power_fwd(X, Y, Acc, Z) :- Y > 0, Y1 is Y-1, Acc1 is Acc*X, power_fwd(X, Y1, Acc1, Z). 
+power_fwd(X, Y, Z) :- power_fwd(X, Y, 1, Z).
 
 
 %--------------------------------------------------
@@ -189,8 +191,15 @@ power_bwd(X, Y, Z):-
 
 % fib(N, X). – will calculate N-th number of the Fibonacci sequence and return it in X
 
-
-% fib(N, X):-   % *IMPLEMENTAȚI AICI*
+fib(0, 0).
+fib(1, 1).
+fib(N, X):- 
+    N > 1,  
+    N1 is N-1,
+    N2 is N-2,
+    fib(N1, X1),
+    fib(N2, X2),
+    X is X1+X2.
 
 
 
@@ -204,7 +213,18 @@ power_bwd(X, Y, Z):-
 % X=21;
 % false.
 
-% fib1(N, X):-   % *IMPLEMENTAȚI AICI*
+
+fib1(N, N, _, Current, Current).
+fib1(N, CurrentN, Prev, Current, Result) :-
+    CurrentN < N,
+    NextN is CurrentN+1,
+    NextCurrent is Prev+Current,
+    fib1(N, NextN, Current, NextCurrent, Result).
+fib1(0, 0).
+fib1(1, 1).
+fib1(N, X) :- 
+    N > 1,
+    fib1(N, 1, 0, 1, X).
 
 
 
@@ -222,7 +242,7 @@ for(Inter,Inter,0).
 for(Inter,Out,In):-
 	In>0,
 	NewIn is In-1,
-	% % *IMPLEMENTAȚI AICI* <do_something_to_Inter_to_get_Intermediate>
+	Intermediate is Inter+In,
 	for(Intermediate,Out,NewIn).
 
 
@@ -239,8 +259,13 @@ for(Inter,Out,In):-
 % și va returna rezultatul în Out
 
 
-
-% for_bwd(In, Out):-   % *IMPLEMENTAȚI AICI*
+for_bwd(0,0).
+for_bwd(In, Out):-
+    In > 0,
+    NewIn is In-1,
+    for_bwd(NewIn, Out1),
+    Out is Out1+In.
+    	
 
 
 
@@ -267,8 +292,12 @@ for(Inter,Out,In):-
 % și va returna rezultatul în Sum
 
 
-% while(Low, High, Sum):-   % *IMPLEMENTAȚI AICI*
-
+while(High, High, 0).
+while(Low, High, Sum):-
+		Low < High,
+		NextLow is Low+1,
+		while(NextLow, High, Sum1),
+		Sum is Sum1+Low.
 
 
 
