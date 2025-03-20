@@ -22,7 +22,10 @@ member1(X, [_|T]) :- member1(X, T).
 % Predicatul APPEND %
 %--------------------------------------------------
 append1([], L2, L2).
-append1([H|T], L2, [H|TailR]) :- append1(T, L2, TailR).
+%append1([H|T], L2, [H|TailR]) :- append1(T, L2, TailR).
+append1([H|T], L2, R) :- 
+    append1(T, L2, R1),
+    R=[H|R1].
 
 % Urmărește execuția la:
 % ?- append1([a,b],[c,d],R).
@@ -81,7 +84,7 @@ delete_all(_, [], []).
 
 % add_first(X,L,R). – adaugă X la începutul listei L și pune rezultatul în R
 
-% add_first(X, L, R):- % *IMPLEMENTAȚI AICI*
+ add_first(X, L, R):- R=[X|L].
 
 
 %--------------------------------------------------
@@ -94,7 +97,9 @@ delete_all(_, [], []).
 
 % append3(L1,L2,L3,R). – va realiza concatenarea listelor L1,L2,L3 în R
 
-% append3(L1,L2,L3,R):-  % *IMPLEMENTAȚI AICI*
+append3([H|T],L2,L3,[H|R]):- append3(T,L2,L3,R).
+append3([],[H|T],L3,[H|R]):- append3([],T,L3,R).
+append3([],[],R,R).
 
 
 
@@ -123,8 +128,12 @@ delete_all(_, [], []).
 % false
 
 
-% separate_parity(L, E, O):-  % *IMPLEMENTAȚI AICI*
-
+separate_parity([H|T], [H|E], O):-  
+    	0 is H mod 2,!,
+    	separate_parity(T,E,O).
+separate_parity([H|T], E, [H|O]):-  
+    	separate_parity(T,E,O).
+separate_parity([], [], []).
 
 
 %--------------------------------------------------
@@ -137,10 +146,16 @@ delete_all(_, [], []).
 % R = [5, 3, 2, 4] ; % păstrează ultima apariție
 % false
 
+remove_duplicates([H|T], Acc, R):- 
+    	member(H,Acc),!,
+    	remove_duplicates(T, Acc, R).
+remove_duplicates([H|T], Acc, R):-
+    	append(Acc, [H], Acc1),
+		remove_duplicates(T,Acc1,R).
+remove_duplicates([], Acc, Acc).
 
-% remove_duplicates(L, R):-  % *IMPLEMENTAȚI AICI*
-
-
+remove_duplicates(L,R) :-
+    	remove_duplicates(L, [], R).
 
 
 %--------------------------------------------------
@@ -150,7 +165,12 @@ delete_all(_, [], []).
 % false
 
 
-% replace_all(X, Y, L, R):-  % *IMPLEMENTAȚI AICI*
+replace_all(X, Y, [X|T], [Y|R]) :-
+    replace_all(X,Y,T,R).
+replace_all(X, Y, [H|T], [H|R]):-
+    H\=X,
+    replace_all(X,Y,T,R).
+replace_all(_, _, [], []).
 
 
 
@@ -162,9 +182,29 @@ delete_all(_, [], []).
 % false
 
 
-% drop_k(L, K, R):-  % *IMPLEMENTAȚI AICI*
+drop_k_fwd([_|T], K, CurrentN, Acc, R) :-
+		0 is (CurrentN+1) mod K, !,
+    	NextN is CurrentN+1,
+    	drop_k_fwd(T, K, NextN, Acc, R).
+drop_k_fwd([H|T], K, CurrentN, Acc, R) :-
+    	NextN is CurrentN+1,
+    	append1(Acc, [H], Acc1),
+    	drop_k_fwd(T, K, NextN, Acc1, R).
+drop_k_fwd([], _, _, Acc, Acc).
 
+drop_k_fwd(L, K, R):- 
+    	drop_k_fwd(L, K, 0, [], R).
 
+drop_k_bwd([_|T], K, CurrentN, R) :-
+    	0 is CurrentN mod K, !,
+    	NextN is CurrentN+1,
+		drop_k_bwd(T, K, NextN, R).
+drop_k_bwd([H|T], K, CurrentN, [H|R]) :-
+		NextN is CurrentN+1,
+		drop_k_bwd(T, K, NextN, R).
+drop_k_bwd([], _, _, []).
+drop_k_bwd(L, K, R) :-
+    	drop_k_bwd(L, K, 1, R).
 
 
 
@@ -189,7 +229,6 @@ delete_all(_, [], []).
 
 
 % pack_consecutive_duplicates(L, R):-  % *IMPLEMENTAȚI AICI*
-
 
 
 
