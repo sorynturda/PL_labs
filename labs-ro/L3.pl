@@ -84,11 +84,7 @@ delete_all(_, [], []).
 
 % add_first(X,L,R). – adaugă X la începutul listei L și pune rezultatul în R
 
-<<<<<<< HEAD
- add_first(X, L, R):- R=[X|L].
-=======
 add_first(X, L, R) :- R=[X|L].
->>>>>>> 7fda4f0 (lab 3 de facut)
 
 
 %--------------------------------------------------
@@ -101,15 +97,10 @@ add_first(X, L, R) :- R=[X|L].
 
 % append3(L1,L2,L3,R). – va realiza concatenarea listelor L1,L2,L3 în R
 
-<<<<<<< HEAD
 append3([H|T],L2,L3,[H|R]):- append3(T,L2,L3,R).
 append3([],[H|T],L3,[H|R]):- append3([],T,L3,R).
 append3([],[],R,R).
-=======
-append3([], [], R, R).
-append3([H|T], L2, L3, [H|R]) :- append3(T, L2, L3, R).
-append3([], [H|T], L3, [H|R]) :- append3([], T, L3, R).
->>>>>>> 7fda4f0 (lab 3 de facut)
+
 
 
 
@@ -145,15 +136,7 @@ sum_fwd(L, S):-
 % O = [1, 3, 5] ;
 % false
 
-<<<<<<< HEAD
 
-separate_parity([H|T], [H|E], O):-  
-    	0 is H mod 2,!,
-    	separate_parity(T,E,O).
-separate_parity([H|T], E, [H|O]):-  
-    	separate_parity(T,E,O).
-separate_parity([], [], []).
-=======
 separate_parity([], [], []).
 separate_parity([H|T], E, [H|O]):- 
 		1 is H mod 2,
@@ -162,7 +145,6 @@ separate_parity([H|T], [H|E], O):-
 		0 is H mod 2,
 		separate_parity(T, E, O).
 
->>>>>>> 7fda4f0 (lab 3 de facut)
 
 
 %--------------------------------------------------
@@ -175,18 +157,7 @@ separate_parity([H|T], [H|E], O):-
 % R = [5, 3, 2, 4] ; % păstrează ultima apariție
 % false
 
-<<<<<<< HEAD
-remove_duplicates([H|T], Acc, R):- 
-    	member(H,Acc),!,
-    	remove_duplicates(T, Acc, R).
-remove_duplicates([H|T], Acc, R):-
-    	append(Acc, [H], Acc1),
-		remove_duplicates(T,Acc1,R).
-remove_duplicates([], Acc, Acc).
 
-remove_duplicates(L,R) :-
-    	remove_duplicates(L, [], R).
-=======
 remove_duplicates([], []).
 remove_duplicates([H|T], R) :-
 		member(H, T), !,
@@ -196,31 +167,19 @@ remove_duplicates([H|T], [H|R]) :-
 
 
 
->>>>>>> 7fda4f0 (lab 3 de facut)
-
-
 %--------------------------------------------------
 % 6. Scrieți un predicat care să înlocuiască toate aparițiile lui X în lista L cu Y și să pună rezultatul în R.
 % ?- replace_all(1, a, [1, 2, 3, 1, 2], R).
 % R = [a, 2, 3, a, 2] ;
 % false
 
-replace_all(_, _, [], []).
-% replace_all(X, Y, [X|T] , [Y|R]) :-
-% 		replace_all(X, Y, T, R).
-replace_all(X, Y, [X|T] , [Y|R]) :-
-		replace_all(X, Y, T, R).
 
-
-<<<<<<< HEAD
 replace_all(X, Y, [X|T], [Y|R]) :-
     replace_all(X,Y,T,R).
 replace_all(X, Y, [H|T], [H|R]):-
     H\=X,
     replace_all(X,Y,T,R).
 replace_all(_, _, [], []).
-=======
->>>>>>> 7fda4f0 (lab 3 de facut)
 
 
 

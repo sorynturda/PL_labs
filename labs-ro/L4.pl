@@ -160,8 +160,11 @@ union([H|T], L2, [H|R]) :- union(T, L2, R).
 % R = [1, 3] ;
 % false
 
-
-% intersect(L1, L2, R):-  % *IMPLEMENTAȚI AICI*
+intersect([], _, []).
+intersect([H|T], L2, [H|R]) :- 
+		member1(H, L2), !, intersect(T, L2, R).
+intersect([_|T], L2, R) :- 
+		intersect(T, L2, R).
 
 
 
@@ -175,15 +178,18 @@ union([H|T], L2, [H|R]) :- union(T, L2, R).
 % false
 
 
-% diff(L1, L2, R):-  % *IMPLEMENTAȚI AICI*
-
+diff([], _, []).
+diff([H|T], L2, R) :- 
+		member1(H, L2), !, diff(T, L2, R).
+diff([H|T], L2, [H|R]) :- 
+		diff(T, L2, R).
 
 
 
 %--------------------------------------------------
 % 3. Scrieți predicatele del_min(L,R) și del_max(L,R) care șterg toate aparițiile
 % minimului, respectiva ale maximului din lista L.
-% ?- del_min([1,3,1,2,1], R).
+% ?- del_min1([1,3,1,2,1], R).
 % R = [3, 2] ;
 % false
 % ?- del_max([3,1,3,2,3], R).
@@ -191,7 +197,7 @@ union([H|T], L2, [H|R]) :- union(T, L2, R).
 % false
 
 
-% del_min(L, R):-  % *IMPLEMENTAȚI AICI*
+% del_min(L, R):- min2(L, X), delete1(X, L, R).
 
 
 % del_max(L, R):-  % *IMPLEMENTAȚI AICI*
@@ -203,9 +209,16 @@ union([H|T], L2, [H|R]) :- union(T, L2, R).
 %--------------------------------------------------
 % Exercițiu greu: Încercați să implementați fiecare din aceste predicate folosind o singură traversare a listei (del_min1/2 și del_max1/2). (del_min1/2 and del_max1/2).
 
+del_min([], _, []).
+del_min1([H|T], Mp, R):-
+		H < Mp, !,
+		del_min1(T, H, R),
 
-% del_min1(L, R):-  % *IMPLEMENTAȚI AICI*
+del_min1([H|T], Mp, [H|R]):-
+		del_min1(T, Mp, R).
 
+del_min1([H|T], R):- 
+		del_min1(T, H, R).
 
 % del_max2(L, R):-  % *IMPLEMENTAȚI AICI*
 
@@ -219,8 +232,12 @@ union([H|T], L2, [H|R]) :- union(T, L2, R).
 % R = [1, 2, 5, 4, 3] ;
 % false
 
+reverse_k(L, 0, R) :-
+	reverse1(L, R),!.
 
-
+reverse_k([H|T], K, [H|R]) :-
+		NewK is K-1,
+		reverse_k(T, NewK, R).
 
 
 %--------------------------------------------------
@@ -260,7 +277,8 @@ union([H|T], L2, [H|R]) :- union(T, L2, R).
 % false
 
 
-% rotate_right(L, K, R):-  % *IMPLEMENTAȚI AICI*
+rotate_right(L, K, R):-
+		append(X, Y, L), length(Y, K), append(Y, X, R).
 
 
 
