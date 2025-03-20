@@ -84,7 +84,11 @@ delete_all(_, [], []).
 
 % add_first(X,L,R). – adaugă X la începutul listei L și pune rezultatul în R
 
+<<<<<<< HEAD
  add_first(X, L, R):- R=[X|L].
+=======
+add_first(X, L, R) :- R=[X|L].
+>>>>>>> 7fda4f0 (lab 3 de facut)
 
 
 %--------------------------------------------------
@@ -97,9 +101,15 @@ delete_all(_, [], []).
 
 % append3(L1,L2,L3,R). – va realiza concatenarea listelor L1,L2,L3 în R
 
+<<<<<<< HEAD
 append3([H|T],L2,L3,[H|R]):- append3(T,L2,L3,R).
 append3([],[H|T],L3,[H|R]):- append3([],T,L3,R).
 append3([],[],R,R).
+=======
+append3([], [], R, R).
+append3([H|T], L2, L3, [H|R]) :- append3(T, L2, L3, R).
+append3([], [H|T], L3, [H|R]) :- append3([], T, L3, R).
+>>>>>>> 7fda4f0 (lab 3 de facut)
 
 
 
@@ -112,9 +122,17 @@ append3([],[],R,R).
 
 % sum(L, S). – calculează suma elementelor din L și returnează suma în S
 
-% sum_bwd(L, S):-  % *IMPLEMENTAȚI AICI*
+sum_bwd([], 0).
+sum_bwd([H|T], S):-
+		sum_bwd(T, S1),
+		S is H+S1.
 
-% sum_fwd(L, S):-  % *IMPLEMENTAȚI AICI*
+sum_fwd([], Acc, Acc).
+sum_fwd([H|T], Acc, S) :- 
+		Acc1 is H+Acc,
+		sum_fwd(T, Acc1, S).
+sum_fwd(L, S):-
+		sum_fwd(L, 0, S). 
 
 
 
@@ -127,6 +145,7 @@ append3([],[],R,R).
 % O = [1, 3, 5] ;
 % false
 
+<<<<<<< HEAD
 
 separate_parity([H|T], [H|E], O):-  
     	0 is H mod 2,!,
@@ -134,6 +153,16 @@ separate_parity([H|T], [H|E], O):-
 separate_parity([H|T], E, [H|O]):-  
     	separate_parity(T,E,O).
 separate_parity([], [], []).
+=======
+separate_parity([], [], []).
+separate_parity([H|T], E, [H|O]):- 
+		1 is H mod 2,
+		separate_parity(T, E, O).
+separate_parity([H|T], [H|E], O):-
+		0 is H mod 2,
+		separate_parity(T, E, O).
+
+>>>>>>> 7fda4f0 (lab 3 de facut)
 
 
 %--------------------------------------------------
@@ -146,6 +175,7 @@ separate_parity([], [], []).
 % R = [5, 3, 2, 4] ; % păstrează ultima apariție
 % false
 
+<<<<<<< HEAD
 remove_duplicates([H|T], Acc, R):- 
     	member(H,Acc),!,
     	remove_duplicates(T, Acc, R).
@@ -156,6 +186,17 @@ remove_duplicates([], Acc, Acc).
 
 remove_duplicates(L,R) :-
     	remove_duplicates(L, [], R).
+=======
+remove_duplicates([], []).
+remove_duplicates([H|T], R) :-
+		member(H, T), !,
+		remove_duplicates(T, R).
+remove_duplicates([H|T], [H|R]) :-
+		remove_duplicates(T, R).
+
+
+
+>>>>>>> 7fda4f0 (lab 3 de facut)
 
 
 %--------------------------------------------------
@@ -164,13 +205,22 @@ remove_duplicates(L,R) :-
 % R = [a, 2, 3, a, 2] ;
 % false
 
+replace_all(_, _, [], []).
+% replace_all(X, Y, [X|T] , [Y|R]) :-
+% 		replace_all(X, Y, T, R).
+replace_all(X, Y, [X|T] , [Y|R]) :-
+		replace_all(X, Y, T, R).
 
+
+<<<<<<< HEAD
 replace_all(X, Y, [X|T], [Y|R]) :-
     replace_all(X,Y,T,R).
 replace_all(X, Y, [H|T], [H|R]):-
     H\=X,
     replace_all(X,Y,T,R).
 replace_all(_, _, [], []).
+=======
+>>>>>>> 7fda4f0 (lab 3 de facut)
 
 
 
