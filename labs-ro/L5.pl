@@ -202,7 +202,10 @@ ins_sort_fwd(L, R):-  ins_sort_fwd(L, [], R).
 
 % bubble_sort_fixed(L, K, R):-  % *IMPLEMENTAȚI AICI*, K este numărul de treceri
 
-
+bubble_sort_fixed(L, K, R):- K>0, K1 is K-1, 
+    one_pass(L, R1, F), nonvar(F), !, 
+    bubble_sort_fixed(R1, K1, R).
+bubble_sort_fixed(L,_,L).
 
 
 
@@ -218,6 +221,14 @@ ins_sort_fwd(L, R):-  ins_sort_fwd(L, [], R).
 
 % sort_chars(L, R):-  % *IMPLEMENTAȚI AICI*
 
+bubble_sort_ch(L, R):-one_pass_ch(L, R1, F), nonvar(F), !, bubble_sort_ch(R1, R).
+bubble_sort_ch(L, L).
+one_pass_ch([H1, H2|T], [H2|R], F):- char_code(H1,H11),char_code(H2,H22),H11>H22 ,!, F = 1, one_pass_ch([H1|T], R, F).
+one_pass_ch([H1|T], [H1|R], F):-one_pass_ch(T, R, F).
+one_pass_ch([], [] ,_).
+
+sort_chars(L, R):- one_pass_ch(L, R1, F), nonvar(F), !, bubble_sort_ch(R1, R).
+
 
 
 
@@ -228,7 +239,13 @@ ins_sort_fwd(L, R):-  ins_sort_fwd(L, [], R).
 % false
 
 % sort_lens(L, R):-  % *IMPLEMENTAȚI AICI*
+bubble_sort_len(L, R):-one_pass_len(L, R1, F), nonvar(F), !, bubble_sort_len(R1, R).
+bubble_sort_len(L, L).
+one_pass_len([H1, H2|T], [H2|R], F):- length(H1,H11), length(H2,H22),H11>H22 ,!, F = 1, one_pass_len([H1|T], R, F).
+one_pass_len([H1|T], [H1|R], F):-one_pass_len(T, R, F).
+one_pass_len([], [] ,_).
 
+sort_lens(L, R):- one_pass_len(L, R1, F), nonvar(F), !, bubble_sort_len(R1, R).
 
 
 
