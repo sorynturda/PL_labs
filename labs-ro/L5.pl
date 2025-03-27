@@ -156,8 +156,11 @@ merge(L, [], L).
 % false
 
 
-% sel_sort_max(L, R):-  % *IMPLEMENTAȚI AICI*
+max2([H|T], M) :- max2(T, M), M>H, !.
+max2([H|_], H).
 
+sel_sort_max(L, [M|R]):- max2(L, M), delete1(M, L, L1), sel_sort_max(L1, R).
+sel_sort_max([], []).
 
 
 
@@ -172,9 +175,22 @@ merge(L, [], L).
 % false
 
 
-% ins_sort_fwd(L, R):-  % *IMPLEMENTAȚI AICI*
+
+ins_sort_fwd([H|T], Acc, R):- 
+		insert_ord_fwd(H, Acc, Acc1),
+		ins_sort_fwd(T, Acc1, R).
+ins_sort_fwd([], Acc, Acc).
+
+insert_ord_fwd(X, L, R):- insert_ord_fwd(X, L, [], R).
 
 
+insert_ord_fwd(X, [H|T], Acc, R):-
+	X>H, !, 
+	append(Acc, [H], Acc1),
+	insert_ord_fwd(X, T, Acc1, R).
+insert_ord_fwd(X, T, Acc, R) :- append(Acc, [X|T] ,R).
+
+ins_sort_fwd(L, R):-  ins_sort_fwd(L, [], R).
 
 
 %--------------------------------------------------
@@ -206,7 +222,7 @@ merge(L, [], L).
 
 
 %--------------------------------------------------
-% Scrieți un predicat care să sorteze o lista de sub-liste în funcție de lungimea sub-listelor
+% Scrieți un predicat care să sorteze o lista de subliste în funcție de lungimea sublistelor
 % ?- sort_lens([[a, b, c], [f], [2, 3, 1, 2], [], [4, 4]], R).
 % R = [[], [f], [4, 4], [a, b, c], [2, 3, 1, 2]] ;
 % false
