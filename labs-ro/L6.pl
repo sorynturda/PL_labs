@@ -1,6 +1,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%% 			LABORATORUL 6 EXEMPLE		%%%%%%
-%%%%%% 				Deep Lists				%%%%%%
+%%%%%%          LABORATORUL 6 EXEMPLE       %%%%%%
+%%%%%%              Deep Lists              %%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % L1 = [1,2,3,[4]]
@@ -83,7 +83,7 @@ heads1([H|T],R):- heads1(H,R1), heads1(T,R2),append(R1,R2,R).
 heads2([],[],_).
 heads2([],[],_).
 % dacă flag=1 atunci suntem la început de lista și putem extrage capul
-listei; în apelul recursiv setam flag=0
+% listei; în apelul recursiv setam flag=0
 heads2([H|T],[H|R],1):- atomic(H), !, heads2(T,R,0).
 % dacă flag=0 atunci nu suntem la primul element atomic și
 % atunci continuam cu restul elementelor
@@ -123,7 +123,7 @@ member2(X, [_|T]):- member1(X,T).
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%% 				EXERCIȚII				%%%%%%
+%%%%%%              EXERCIȚII               %%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %--------------------------------------------------
@@ -133,8 +133,17 @@ member2(X, [_|T]):- member1(X,T).
 % R = 13;
 % false.
 
+count_atomic([], 0).
+count_atomic([H|T], R):- 
+        atomic(H), !,   
+        count_atomic(T, R1), 
+        R is 1+R1.
 
-% count_atomic(L, R):-  % *IMPLEMENTAȚI AICI*
+count_atomic([H|T], R) :- 
+        count_atomic(H, R1), 
+        count_atomic(T, R2), 
+        R is R1+R2.
+
 
 
 
@@ -147,8 +156,16 @@ member2(X, [_|T]):- member1(X,T).
 % false.
 
 
-% sum_atomic(L, R):-  % *IMPLEMENTAȚI AICI*
+sum_atomic([], 0).
+sum_atomic([H|T], R):- 
+        atomic(H), !,   
+        sum_atomic(T, R1), 
+        R is H+R1.
 
+sum_atomic([H|T], R) :- 
+        sum_atomic(H, R1), 
+        sum_atomic(T, R2), 
+        R is R1+R2.
 
 
 
@@ -160,7 +177,20 @@ member2(X, [_|T]):- member1(X,T).
 % false.
 
 
-% replace(X, Y, L, R):-  % *IMPLEMENTAȚI AICI*
+replace(_, _, [], []).
+replace(X, Y, [X|T], [Y|R]):- 
+        atomic(X), !,   
+        replace(X, Y, T, R).
+
+replace(X, Y, [H|T], [H|R]):- 
+        atomic(H), !,   
+        replace(X, Y, T, R).
+
+replace(X, Y, [H|T], R) :- 
+        replace(X, Y, H, R1), 
+        replace(X, Y, T, R2), 
+        append([R1], R2, R).
+
 
 
 
@@ -171,9 +201,17 @@ member2(X, [_|T]):- member1(X,T).
 % R = [3,5,10,8] ;
 % false.
 
+lasts([], []).
+lasts([H|[]], [H]):- atomic(H), !.
 
-% lasts(L, R):-  % *IMPLEMENTAȚI AICI*
+lasts([H|T], R):- 
+        atomic(H), !,   
+        lasts(T, R).
 
+lasts([H|T], R) :- 
+        lasts(H, R1), 
+        lasts(T, R2),
+        append(R1, R2, R).
 
 
 
@@ -220,13 +258,13 @@ member2(X, [_|T]):- member1(X,T).
 % compara în funcție de elementele atomice pe care le conțin.
 % Sugestie:
 % • L1 < L2, dacă L1 și L2 sunt liste, sau liste adânci, și dacă adâncimea
-%	listei L1 este mai mică decât adâncimea listei L2.
+%   listei L1 este mai mică decât adâncimea listei L2.
 % • L1 < L2, dacă L1 și L2 sunt liste, sau liste adânci cu adâncime egală,
-%	toate elementele până la poziția k sunt egale, iar al k+1-lea element
-% 	din lista L1 este mai mic decât al k+1-lea element din lista L (la
-%	adâncimi egale, lista cu indexul mai mic sublistei care va da ultima
-%	adâncime este considerat mai mare – ca în exemplu la comparația
-%	dintre 5 și [5])
+%   toate elementele până la poziția k sunt egale, iar al k+1-lea element
+%   din lista L1 este mai mic decât al k+1-lea element din lista L (la
+%   adâncimi egale, lista cu indexul mai mic sublistei care va da ultima
+%   adâncime este considerat mai mare – ca în exemplu la comparația
+%   dintre 5 și [5])
 % ?- sort_depth([[[[1]]], 2, [5,[4],7], [[5],4], [5,[0,9]]], R).
 % R = [2, [5,[0,9]], [[5],4], [5,[4],7], [[[1]]]] ;
 % false
