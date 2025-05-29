@@ -1,6 +1,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%% 			LABORATORUL 7 EXEMPLE		%%%%%%
-%%%%%% 					Trees				%%%%%%
+%%%%%%          LABORATORUL 7 EXEMPLE       %%%%%%
+%%%%%%                  Trees               %%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %EXEMPLE DE ARBORI
@@ -18,24 +18,24 @@ tree2(t(8, t(5, nil, t(7, nil, nil)), t(9, nil, t(11, nil, nil)))).
 
 % subarbore stâng, cheie și subarbore drept (ordinea din append)
 inorder(t(K,L,R), List):-
-	inorder(L,LL), 
-	inorder(R, LR),
-	append(LL, [K|LR],List).
+    inorder(L,LL), 
+    inorder(R, LR),
+    append(LL, [K|LR],List).
 inorder(nil, []). 
 
 % cheie, subarbore stâng și subarbore drept (ordinea din append)
 preorder(t(K,L,R), List):-
-	preorder(L,LL), 
-	preorder(R, LR),
-	append([K|LL], LR, List).
+    preorder(L,LL), 
+    preorder(R, LR),
+    append([K|LL], LR, List).
 preorder(nil, []).
 
 % subarbore stâng, subarbore drept și apoi cheia (ordinea din append-uri)
 postorder(t(K,L,R), List):-
-	postorder(L,LL), 
-	postorder(R, LR),
-	append(LL, LR, R1), 
-	append(R1, [K], List).
+    postorder(L,LL), 
+    postorder(R, LR),
+    append(LL, LR, R1), 
+    append(R1, [K], List).
 postorder(nil, []). 
 
 
@@ -57,10 +57,10 @@ pretty_print(T):- pretty_print(T, 0).
 % predicatul care printează arborele
 pretty_print(nil, _).
 pretty_print(t(K,L,R), D):- 
-	D1 is D+1,
-	pretty_print(L, D1),
-	print_key(K, D),
-	pretty_print(R, D1).
+    D1 is D+1,
+    pretty_print(L, D1),
+    print_key(K, D),
+    pretty_print(R, D1).
 
 % predicat care afișează cheia K la D tab-uri față de marginea din stânga
 % și inserează o linie nouă (prin nl)
@@ -137,9 +137,9 @@ max(_, Y, Y).
 height(nil, 0).
 height(t(_, L, R), H):- 
     height(L, H1),
- 	height(R, H2),
- 	max(H1, H2, H3),
- 	H is H3+1.
+    height(R, H2),
+    max(H1, H2, H3),
+    H is H3+1.
 
 
 % Urmărește execuția la:
@@ -149,10 +149,10 @@ height(t(_, L, R), H):-
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%% 				EXERCIȚII				%%%%%%
+%%%%%%              EXERCIȚII               %%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Arbori:
-tree1(t(6, t(4,t(2,nil,nil),t(5,nil,nil)), t(9,t(7,nil,nil),nil))).
+binary_tree(t(6, t(4,t(2,nil,nil),t(5,nil,nil)), t(9,t(7,nil,nil),nil))).
 ternary_tree(t(6, t(4, t(2, nil, nil, nil), nil, t(7, nil, nil, nil)), t(5, nil, nil, nil), t(9, t(3, nil, nil, nil), nil, nil))).
 
 
@@ -171,11 +171,30 @@ ternary_tree(t(6, t(4, t(2, nil, nil, nil), nil, t(7, nil, nil, nil)), t(5, nil,
 % L = [2, 7, 4, 5, 3, 9, 6], T= ... 
 
 
-% ternary_preorder(T, List):- % *IMPLEMENTAȚI AICI*
+ternary_preorder(t(K,L,M,R), List):-
+    ternary_preorder(L, LL), 
+    ternary_preorder(M, LM),
+    ternary_preorder(R, LR),
+    append([K|LL], MR, List1),
+    append(List1, LR, List).
+ternary_preorder(nil, []).
 
-% ternary_inorder(T, List):- % *IMPLEMENTAȚI AICI*
+ternary_inorder(t(K,L,M,R), List):-
+    ternary_inorder(L, LL), 
+    ternary_inorder(M, LM),
+    ternary_inorder(R, LR),
+    append(LL, [K|MR], List1),
+    append(List1, LR, List).
+ternary_inorder(nil, []).
 
-% ternary_postorder(T, List):- % *IMPLEMENTAȚI AICI*
+ternary_postorder(t(K,L,M,R), List):-
+    ternary_postorder(L, LL), 
+    ternary_postorder(M, LM),
+    ternary_postorder(R, LR),
+    append(LL, MR, List1),
+    append(List1, LR, List2),
+    append(List2, [K], List).
+ternary_postorder(nil, []).
 
 
 %--------------------------------------------------
@@ -183,8 +202,19 @@ ternary_tree(t(6, t(4, t(2, nil, nil, nil), nil, t(7, nil, nil, nil)), t(5, nil,
 % ?- ternary_tree(T), pretty_print_ternary(T).
 
 
-% pretty_print_ternary(T):- % *IMPLEMENTAȚI AICI*
 
+
+% wrapper
+pretty_print_ternary(T):- pretty_print_ternary(T, 0).
+
+% predicatul care printează arborele
+pretty_print_ternary(nil, _).
+pretty_print_ternary(t(K,L,M,R), D):- 
+    D1 is D+1,
+    pretty_print_ternary(L, D1),
+    print_key(K, D),
+    pretty_print_ternary(M, D1),
+    pretty_print_ternary(R, D1).
 
 
 %--------------------------------------------------
@@ -193,36 +223,54 @@ ternary_tree(t(6, t(4, t(2, nil, nil, nil), nil, t(7, nil, nil, nil)), t(5, nil,
 % H=3, T= ... ;
 % false.
 
-% ternary_height(T, H):- % *IMPLEMENTAȚI AICI*
+ternary_height(nil, 0).
+ternary_height(t(_, L, M, R), H):- 
+    ternary_height(L, H1),
+    ternary_height(M, H2),
+    ternary_height(R, H3),
+    max(H1, H2, H4),
+    max(H3, H4, H5),
+    H is H5+1.
 
 
 
 
 %--------------------------------------------------
 % 4. Scrieți un predicat care colectează într-o listă toate cheile din frunzele arborelui binar de căutare.
-% ?- tree1(T), leaf_list(T, R).
+% ?- binary_tree(T), leaf_list(T, R).
 % R=[2,5,7], T= ... ;
 % false.
 
-% leaf_list(T, List):- % *IMPLEMENTAȚI AICI*
-
+leaf_list(nil, []).
+leaf_list(t(K, nil, nil), [K]).
+leaf_list(t(K, L, R), List):- 
+    leaf_list(L, List1),
+    leaf_list(R, List2),
+    append(List1, List2, List).
 
 
 
 %--------------------------------------------------
 % 5. Scrieți un predicat care colectează într-o listă toate cheile interne (nonfrunze) a unui arbore binar de căutare.
-% ?- tree1(T), internal_list(T, R).
+% ?- binary_tree(T), internal_list(T, R).
 % R = [4, 6, 9], T = ... ;
 % false.
 
-% internal_list(T, List):- % *IMPLEMENTAȚI AICI*
+internal_list(nil, []).
+internal_list(t(K, nil, nil), []).
+
+internal_list(t(K, L, R), List):- 
+    internal_list(L, List1),
+    internal_list(R, List2),
+    append(List1, [K|List2], List).
+
 
 
 
 
 %--------------------------------------------------
 % 6. Scrieți un predicat care colectează într-o listă toate nodurile de la aceeași adâncime (inversa înălțimii) din arborele binar.
-% ?- tree1(T), same_depth(T, 2, R).
+% ?- binary_tree(T), same_depth(T, 2, R).
 % R = [4, 9], T = ... ;
 % false.
 
@@ -233,7 +281,7 @@ ternary_tree(t(6, t(4, t(2, nil, nil, nil), nil, t(7, nil, nil, nil)), t(5, nil,
 %--------------------------------------------------
 % 7. Scrieți un predicat care calculează diametrul unui arbore binar.
 % 𝑑𝑖𝑎𝑚(𝑇) = max {𝑑𝑖𝑎𝑚(𝑇. 𝑙𝑒𝑓𝑡), 𝑑𝑖𝑎𝑚(𝑇. 𝑟𝑖𝑔ℎ𝑡), ℎ𝑒𝑖𝑔ℎ𝑡(𝑇. 𝑙𝑒𝑓𝑡) + ℎ𝑒𝑖𝑔ℎ𝑡(𝑇. 𝑟𝑖𝑔ℎ𝑡) + 1}
-% ?- tree1(T), diam(T, D).
+% ?- binary_tree(T), diam(T, D).
 % D = 5, T = ... ;
 % false.
 
@@ -246,9 +294,9 @@ ternary_tree(t(6, t(4, t(2, nil, nil, nil), nil, t(7, nil, nil, nil)), t(5, nil,
 % arbore binar este simetric dacă subarborele stâng este imaginea în
 % oglindă a subarborelui drept. Ne interesează structura arborelui nu și
 % valorile (cheile) din noduri. 
-% ?- tree1(T), symmetric(T).
+% ?- binary_tree(T), symmetric(T).
 % false.
-% ?- tree1(T), delete_key(2, T, T1), symmetric(T1).
+% ?- binary_tree(T), delete_key(2, T, T1), symmetric(T1).
 % T = t(6,t(4,t(2,nil,nil),t(5,nil,nil)),t(9,t(7,nil,nil),nil)),
 % T1 = t(6,t(4,nil,t(5,nil,nil)),t(9,t(7,nil,nil),nil));
 % false.
@@ -260,14 +308,13 @@ ternary_tree(t(6, t(4, t(2, nil, nil, nil), nil, t(7, nil, nil, nil)), t(5, nil,
 
 %--------------------------------------------------
 % 9. Rescrieți predicatul delete_key folosind nodul succesor (arbori binari de căutare).
-% ?- tree1(T), delete_key(5, T, T1), delete_key_succ(5, T, T2).
+% ?- binary_tree(T), delete_key(5, T, T1), delete_key_succ(5, T, T2).
 % T1 = T2, T2 = t(6,t(4,t(2,nil,nil),nil),t(9,t(7,nil,nil),nil)),
 % T = t(6,t(4,t(2,nil,nil),t(5,nil,nil)),t(9,t(7,nil,nil),nil)).
-% ?- tree1(T), delete_key(6, T, T1), delete_key_succ(6, T, T2).
+% ?- binary_tree(T), delete_key(6, T, T1), delete_key_succ(6, T, T2).
 % T = t(6,t(4,t(2,nil,nil),t(5,nil,nil)),t(9,t(7,nil,nil),nil)),
 % T1 = t(5,t(4,t(2,nil,nil),nil),t(9,t(7,nil,nil),nil)),
 % T2 = t(7,t(4,t(2,nil,nil),t(5,nil,nil)),t(9,nil,nil))
 
 
 % delete_key_succ(K, T, T2):- % *IMPLEMENTAȚI AICI*
-
