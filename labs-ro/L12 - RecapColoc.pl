@@ -9,25 +9,70 @@
 
 %1.	Calculați cel mai mare divizor comun a două numere. 
 %?- cmmdc(15,25,R). 
-%R = 5. 
+%R = 5.
+cmmdc(X, X, X).
+cmmdc(X, Y, R) :-
+    X \= Y,
+    X > Y, !,
+    X1 is X - Y,
+    cmmdc(X1, Y, R).
 
+cmmdc(X, Y, R) :-
+    X \= Y,
+    Y1 is Y - X,
+    cmmdc(X, Y1, R).
 
 
 %2.	Calculați cel mai mic multiplu comun a două numere. 
 %?- cmmmc(15,25,R). 
 %R = 75. 
 
-
+cmmmc(X, Y, R) :-
+    cmmdc(X,Y,CMMDC),
+    R is (X * Y) / CMMDC.
 
 %3.	Calculați divizorii unui număr natural.
 %?-  divisor(15,R1), divisor(2,R2), divisor(1,R3), divisor(0,R4),divisor(6,R5). 
 %R1 = [1,3,5,15], R2 = [1,2], R3 = [1], R4 = alot, R5 = [1,2,3,6]. 
 
+divisor(X, N, []) :-
+    N > X.
+divisor(X, N, [N|R]) :-
+    N =< X,
+    0 is X mod N,
+    N1 is N+1,
+    divisor(X, N1, R).
+
+divisor(X, N, R) :-
+	N =< X,
+%    X mod N =\= 0,
+    \+ (0 is X mod N),
+    N1 is N+1,
+    divisor(X,N1,R).
+
+divisor(X, R) :-
+    divisor(X, 1, R).
 
 %4.	Convertiți un număr în binar (puterile lui 2 cresc de la dreapta la stânga). 
 %?- to_binary(5,R1),to_binary(8,R2),to_binary(11,R3). 
 %R1 = [1,0,1], R2 = [1,0,0,0], R3 = [1,0,1,1]. 
 
+to_binary(0, Acc, Acc) :- !.
+
+to_binary(X, Acc, R) :-
+    0 is X mod 2,
+   	New_X is div(X,2),
+    append([0],Acc, Acc1),
+    to_binary(New_X,Acc1, R).
+
+to_binary(X, Acc, R) :-
+    \+ (0 is X mod 2),
+    New_X is div(X, 2),
+    append([1], Acc, Acc1),
+	to_binary(New_X,Acc1, R).
+
+to_binary(X, R) :- 
+    to_binary(X,[],R).
 
 
 %5.	Inversați un număr natural.
@@ -35,7 +80,14 @@
 %R1 = 51, R2 = 421542121. 
 
 
+reverse(0, Acc, Acc) :- !.
+reverse(X, Acc, R) :-
+    New_X is div(X, 10),
+    Acc1 is Acc*10 + X mod 10,
+    reverse(New_X, Acc1, R).
 
+reverse(X, R) :-
+    reverse(X, 0, R).
 
 
 
@@ -49,11 +101,32 @@
 %?- sum([1,2,3,4,5], R).
 %R = 15. 
 
+sum([], 0).
+
+sum([H|T], R) :- 
+    sum(T, R1),
+    R is H+R1.
 
 
 %7.	Dublați elementele impare și ridicați la pătrat cele pare.
 %?- numbers([2,5,3,1,1,5,4,2,6],R). 
 %R = [4,10,6,2,2,10,16,4,36]. 
+
+numbers([], Acc, Acc).
+numbers([H|T], Acc, R) :-
+    1 is H mod 2,
+    HD is H + H,
+    append(Acc, [HD], Acc1),
+	numbers(T, Acc1, R).
+
+numbers([H|T], Acc, R) :-
+    0 is H mod 2,
+    HP is H*H,
+    append( Acc,[HP], Acc1),
+	numbers(T, Acc1, R).
+
+numbers(L, R) :-
+    numbers(L, [], R).
 
 
 
@@ -61,12 +134,34 @@
 %?- separate([1,2,2,3,4,5,6,6,12,44,8,5,5,10,5],Even,Rest). 
 %Even = [2,4,6,12,8], Rest = [1,2,3,6,44,5,5,10,5]. 
 
+separate([], [], []).
+
+separate([H|T], E, R) :-
+    0 is H mod 2,
+    separate(T, NE, R),
+    append(NE, [H], E).
+
+separate([H|T], E, R) :-
+    1 is H mod 2,
+    
+    separate(T, E, RE),
+	append(RE, [H], R).
+
 
 
 %9.	Înlocuiți toate aparițiile lui X cu Y.
 %?- replace_all(1, a, [1,2,3,1,2], R). 
 %R = [a,2,3,a,2]. 
 
+replace_all(_, _, [], []).
+replace_all(X, Y, [X|T], [Y|R]) :-
+    replace_all(X, Y, T, R).
+
+replace_all(X, Y, [H|T], [H|R]) :-
+    X \= Y,
+    replace_all(X, Y, T, R).
+
+    
 
 
 %10. Înlocuiți toate aparițiile lui of X într-o listă diferență (al doilea si al treilea argument) cu secvența [Y,X,Y].
@@ -119,15 +214,18 @@
 
 
 %18. Codificați o listă cu RLE (Run-length encoding). Două sau mai multe elemente consecutive se
-%înlocuiesc cu (element, nr_apariții).
+%înlocuiesc cu [element, nr_apariții].
 %?- rle_encode([a,a,a,a,b,c,c,a,a,d,e,e,e,e], R).
 %R = [[a,4], [b,1] ,[c,2], [a,2], [d,1] , [e,4]].
 
+
+
+
 %19. Codificați o listă cu RLE (Run-length encoding). Două sau mai multe elemente consecutive se
-%înlocuiesc cu (element, nr_apariții). Dar dacă numărul de apariții este egal cu 1 atunci se
+%înlocuiesc cu [element, nr_apariții]. Dar dacă numărul de apariții este egal cu 1 atunci se
 %scrie doar elementul.
 %?- rle_encode1([1,1,1,2,3,3,4,4], R).
-%R = [(1,3), 2, (3,2), (4,2)].
+%R = [[1,3], 2, [3,2], [4,2]]. 
 
 
 
@@ -340,6 +438,7 @@ node(3).
 
 %46. Calculați gradul interior/exterior al fiecărui nod dintr-un graf folosind predicatul dinamic info(Node, OutDegree, InDegree).  
 %Ex: edge(1,2). edge(2,1). edge(1,4). edge(1,3). edge(3,2). 
+%?- gen_info.
 %=> info(1,3,1). info(2,1,2). info(3,1,1). info(4,0,1).
 
 edge(1,2).
@@ -347,4 +446,3 @@ edge(2,1).
 edge(1,4).
 edge(1,3).
 edge(3,2). 
-
