@@ -230,10 +230,12 @@ incomplete_tree(t(6, t(4,t(2,_,_),t(5,_,_)), t(9,t(7,_,_),_))).
 % R = [1, 2, 3, 4]
 
 
-% convertCL2DL(L, LS, LE):- % *IMPLEMENTAȚI AICI*
+convertCL2DL(L, LS, LE) :-
+    	append(L, LE, LS).
 
-% convertDL2CL(LS, LE, R):- % *IMPLEMENTAȚI AICI*
-
+convertDL2CL(LE, LE, []):- var(LE), !.
+convertDL2CL([H|LS], LE, [H|R]) :-
+    	convertDL2CL(LS, LE, R).
 
 %--------------------------------------------------
 % 2. Convertește o listă incompletă într-o listă diferență și viceversa.
