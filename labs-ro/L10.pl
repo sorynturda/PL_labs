@@ -89,7 +89,7 @@ neighb_to_edge_v3.
 
 
 %--------------------------------------------------
-% Predicatul PATH %
+% Predicatul PATH %kvkldejgkldkjghl;dkrtlgklfldelg mlklk lk lklgmkd l;gf e;l   lhmdkl l khl
 %--------------------------------------------------
 edge(a,c).
 edge(b,c).
@@ -216,8 +216,15 @@ hamilton(NN, X, Path):-
     NN1 is NN-1, 
     hamilton_path(NN1, X, X,[X],Path).
 
-% *IMPLEMENTAȚI AICI*
-
+hamilton_path(0, Current, Source, Path, [Source|Path]) :-
+    edge_ex1(Current, Source).
+    
+hamilton_path(N, Current, Source, Visited, FinalPath) :-
+    N > 0,
+    edge_ex1(Current, Next),
+    \+ member(Next, Visited),
+    N1 is N - 1,   
+    hamilton_path(N1, Next, Source, [Next|Visited], FinalPath).
 
 
 
@@ -382,6 +389,5 @@ edge_ex7(d,e,2).
 %	invers) și cel mult încă un participant (Lupul, Capra, Varza).
 % ● problema poate fi văzută ca o problema de căutare a drumului
 %	într-un graf.
-
 
 
