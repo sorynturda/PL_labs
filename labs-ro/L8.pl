@@ -134,11 +134,11 @@ complete_tree(t(7, t(5, t(3, nil, nil), t(6, nil, nil)), t(11, nil, nil))).
 % ?- convertCL2IL([1,2,3], R).
 % R = [1, 2, 3|_].
 
+convertIL2CL([], []).
+convertIL2CL([H|T], [H|R]):- convertIL2CL(T, R).
 
-% convertIL2CL(L, R):- % *IMPLEMENTAȚI AICI*
-
-% convertCL2IL(L, R):- % *IMPLEMENTAȚI AICI*
-
+convertCL2IL([], _).
+convertCL2IL([H|T], [H|R]):- convertCL2IL(T,R).
 
 
 
@@ -148,8 +148,9 @@ complete_tree(t(7, t(5, t(3, nil, nil), t(6, nil, nil)), t(11, nil, nil))).
 % ?- append_il([1,2|_], [3,4|_], R).
 % R = [1, 2, 3, 4|_].
 
-
-% append_il(L1, L2, R):- % *IMPLEMENTAȚI AICI*
+append_il(L, R, R):-var(L),!.
+append_il([H|T], L,[H|R]):-
+    append_il(T, L, R).
 
 
 
@@ -163,8 +164,18 @@ complete_tree(t(7, t(5, t(3, nil, nil), t(6, nil, nil)), t(11, nil, nil))).
 % R = [3, 2, 1|_].
 
 % reverse_il_fwd(L, R):- % *IMPLEMENTAȚI AICI*
+reverse_il_fwd(L, Acc, Acc) :- var(L), !.
+reverse_il_fwd([H|T], Acc, R) :-
+    Acc1=[H|Acc],
+    reverse_il_fwd(T, Acc1, R).
+reverse_il_fwd(L, R) :- reverse_il_fwd(L, _, R).
 
-% reverse_il_bwd(L, R):- % *IMPLEMENTAȚI AICI*
+
+reverse2(L, R) :- reverse2(L, [], R).
+reverse_il_bwd(L, _):- var(L), !.
+reverse_il_bwd([H|T], R):- 
+    reverse_il_bwd(T, Rtail), 
+    append_il(Rtail, [H|_], R).
 
 
 
@@ -176,7 +187,13 @@ complete_tree(t(7, t(5, t(3, nil, nil), t(6, nil, nil)), t(11, nil, nil))).
 
 
 % flat_il(L, R):- % *IMPLEMENTAȚI AICI*
-
+flat_il(L, _):- var(L).
+flat_il([H|T], [H|R]):- atomic(H), !, 
+    flat_il(T,R).
+flat_il([H|T], R):- 
+    flat_il(H,R1), 
+    flat_il(T,R2), 
+    append_il(R1,R2,R).
 
 
 
@@ -187,9 +204,15 @@ complete_tree(t(7, t(5, t(3, nil, nil), t(6, nil, nil)), t(11, nil, nil))).
 % ?- complete_tree(T), convertCT2IT(T, R).
 % R = t(7, t(5, t(3, _, _), t(6, _, _)), t(11, _, _))
 
-% convertIT2CT(T, R):- % *IMPLEMENTAȚI AICI*
+convertIT2CT(T, nil):- var(T), !.
+convertIT2CT(t(K, L, R), t(K, LL, RR)):-
+    convertIT2CT(L, LL),
+    convertIT2CT(R, RR).
 
-% convertCT2IT(T, R):- % *IMPLEMENTAȚI AICI*
+convertCT2IT(nil, _).
+convertCT2IT(t(K, L, R), t(K, LL, RR)):-
+    convertCT2IT(L, LL),
+    convertCT2IT(R, RR).
 
 
 
@@ -199,8 +222,11 @@ complete_tree(t(7, t(5, t(3, nil, nil), t(6, nil, nil)), t(11, nil, nil))).
 % R = [7, 5, 3, 6, 11|_]
 
 
-% preorder_it(T, R):- % *IMPLEMENTAȚI AICI*
-
+preorder_it(T, _):- var(T), !.
+preorder_it(t(K,L,R), List):-
+	preorder_it(L,LL), 
+	preorder_it(R, LR),
+	append_il([K|LL], LR, List).
 
 
 
@@ -208,10 +234,16 @@ complete_tree(t(7, t(5, t(3, nil, nil), t(6, nil, nil)), t(11, nil, nil))).
 % 7. Calculează înălțimea unui arbore binar incomplet.
 % ?- incomplete_tree(T), height_it(T, R).
 % R=3
+max(X, Y, X):- X>Y, !.
+max(_, Y, Y).
 
 
-% height_it(T, R):- % *IMPLEMENTAȚI AICI*
-
+height_it(T, 0):- var(T), !.
+height_it(t(_, L, R), H):- 
+    height_it(L, H1),
+ 	height_it(R, H2),
+ 	max(H1, H2, H3),
+ 	H is H3+1.
 
 
 
@@ -221,8 +253,17 @@ complete_tree(t(7, t(5, t(3, nil, nil), t(6, nil, nil)), t(11, nil, nil))).
 % ?- incomplete_tree(T), diam_it(T, R).
 % R=4
 
+diam_it(T, 0, 0):- var(T), !.
+diam_it(t(_, Left, Right), H, R):-
+    diam_it(Left, HL, RL),
+    diam_it(Right, HR, RR),
+    max(HL, HR, Hint),
+    H is Hint + 1,
+    D is HL + HR + 1,
+    max(RL, RR, Rint),
+    max(D, Rint, R).
+diam_it(T, R):- diam_it(T, _, R).
 
-% diam_it(T, R):- % *IMPLEMENTAȚI AICI*
 
 
 %--------------------------------------------------
@@ -241,12 +282,3 @@ complete_tree(t(7, t(5, t(3, nil, nil), t(6, nil, nil)), t(11, nil, nil))).
 
 %--------------------------------------------------
 % 10. Scrieți predicatul append_il/2 de concatenare a două liste incomplete folosind doar două argumente (fără argument pentru rezultat)
-
-
-
-
-
-
-
-
-
