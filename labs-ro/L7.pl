@@ -274,8 +274,15 @@ internal_list(t(K, L, R), List):-
 % R = [4, 9], T = ... ;
 % false.
 
-% same_depth(T, K, List):- % *IMPLEMENTAȚI AICI*
 
+same_depth(nil, _,[]).
+same_depth(t(Key,_,_), 1, [Key]) :- !.
+same_depth(t(_,L,R), K, List):- 
+    New_K is K-1,
+    same_depth(L,New_K, LL),
+    same_depth(R,New_K, LR),
+    append(LL, LR,List).
+    
 
 
 %--------------------------------------------------
