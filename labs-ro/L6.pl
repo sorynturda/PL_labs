@@ -221,9 +221,25 @@ lasts([H|T], R) :-
 % R = [[3],[1],[1,[3],1],2].
 
 
-% len_con_depth(L, R):-  % *IMPLEMENTAȚI AICI*
+len_con_depth([], Cnt, [Cnt]).
 
+len_con_depth([H|T], Cnt, R) :-
+    atomic(H), !, 
+    Cnt1 is Cnt+1,
+    len_con_depth(T, Cnt1, R).
 
+len_con_depth([H|T], 0, R) :-
+    len_con_depth(H, 0, R1), !,
+    len_con_depth(T, 0, R2),
+    append([R1], R2, R).
+
+len_con_depth([H|T], Cnt, [Cnt|R]) :-
+    len_con_depth(H, 0, R1),
+    len_con_depth(T, 0, R2),
+    append([R1], R2, R).
+
+len_con_depth(L, R) :-
+    len_con_depth(L, 0, R).
 
 
 %--------------------------------------------------
