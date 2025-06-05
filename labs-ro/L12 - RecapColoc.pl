@@ -122,7 +122,7 @@ numbers([H|T], Acc, R) :-
 numbers([H|T], Acc, R) :-
     0 is H mod 2,
     HP is H*H,
-    append( Acc,[HP], Acc1),
+    append(Acc,[HP], Acc1),
 	numbers(T, Acc1, R).
 
 numbers(L, R) :-
@@ -171,45 +171,160 @@ replace_all(X, Y, [H|T], [H|R]) :-
 
 
 
+
+member1(X, [X|_]) :- !.
+member1(X, [_|T]) :- member1(X, T).
+
+%?- uni([1,2,3], [4,5,6], R1),uni([1,2,5], [2,3], R2).
+uni([], L, L).
+uni([H|T], L2, R) :-
+    member(H, L2), !,
+    uni(T, L2, R).
+uni([H|T], L2, [H|R]) :-
+    uni(T, L2, R).
+
+% ?- int([1,2,3], [1,3,4], R).
+int([], _, []).
+int([H|T], L2, [H|R]) :-
+    member1(H, L2), !,
+    int(T, L2, R).
+int([_|T], L2, R) :-
+    int(T, L2, R).
+
+% ?- diff([1,2,3], [1,3,4], R).
+diff([], _, []).
+diff([H|T], L2, R) :-
+    member1(H,L2), !,
+    diff(T, L2, R).
+diff([H|T], L2, [H|R]) :-
+    diff(T, L2, R).
+
 %11. Sțergeți aparițiile lui X pe poziții pare (indexarea începe de la 1)
 %?- delete_pos_even([1,2,3,4,2,3,3,2,5],2,R). 
 %R = [1,3,4,2,3,3,5]. 
 
+delete_pos_even([], _, _, Acc, Acc).
+
+delete_pos_even([X|T], X, 0, Acc, R) :-
+    !,
+    delete_pos_even(T, X, 1, Acc, R).
+
+delete_pos_even([H|T], X, 0, Acc, R) :-
+    append(Acc, [H], Acc1),
+    delete_pos_even(T, X, 1, Acc1, R).
+
+delete_pos_even([H|T], X, 1, Acc, R) :-
+    append(Acc, [H], Acc1),
+    delete_pos_even(T, X, 0, Acc1, R).
+
+
+delete_pos_even(L, X, R) :-
+    delete_pos_even(L, X, 1, [], R).
 
 
 %12. Ștergeți elementele de pe poziții divizibile cu K. 
 %?- delete_kth([6,5,4,3,2,1], 3, R). 
 %R = [6,5,3,2]. 
 
+delete_kth([], _, _, Acc, Acc).
 
+delete_kth([_|T], Cnt, K, Acc, R) :-
+    0 is Cnt mod K,!,
+    Cnt1 is Cnt+1,
+    delete_kth(T, Cnt1, K, Acc, R).
+
+delete_kth([H|T], Cnt, K, Acc, R) :-
+    Cnt1 is Cnt+1,
+    append(Acc,[H], Acc1),
+    delete_kth(T, Cnt1, K, Acc1, R).
+
+delete_kth(L, K, R) :-
+    delete_kth(L, 1, K, [], R).
+    
 
 %13. Ștergeți elementele de pe poziții divizibile cu K de la finalul listei. 
 %?- delete_kth_end([1,2,3,4,5,6,7,8,9,10],3,R) 
 %R = [1,3,4,6,7,9,10]. 
 
+delete_kth_end([], _, _, Acc, Acc).
+
+delete_kth_end([_|T], Cnt, K, Acc, R) :-
+    0 is Cnt mod K,!,
+    Cnt1 is Cnt-1,
+    delete_kth_end(T, Cnt1, K, Acc, R).
+
+delete_kth_end([H|T], Cnt, K, Acc, R) :-
+    Cnt1 is Cnt-1,
+    append(Acc,[H], Acc1),
+    delete_kth_end(T, Cnt1, K, Acc1, R).
+
+delete_kth_end(L, K, R) :-
+    length(L, Len),
+    delete_kth_end(L, Len, K, [], R).
+    
 
 %14. Ștergeți toate aparițiile elementului minim/maxim dintr-o listă. 
 %?- delete_min([4,5,1,2], R). 
 %R = [4,5,2]. 
 
+min1([H|T], M) :- 
+    min1(T, M),
+    M<H, !.
+min1([H|_], H).
 
+delete_all(_, [], []) :- !.
+delete_all(X, [X|T], R) :- 
+    delete_all(X, T, R), !.
+delete_all(X, [H|T], [H|R]) :-
+    delete_all(X, T, R).
+
+delete_min(L, R) :-
+    min1(L, Min),
+    delete_all(Min, L, R).
+    
 
 %15. Ștergeți elementele duplicate dintr-o listă (păstrează prima sau ultima apariție). 
 %?- delete_duplicates([3,4,5,3,2,4], R). 
 %R = [3,4,5,2].  sau  R = [5,3,2,4]. 
 
-
+delete_duplicates([], []).
+delete_duplicates([H|T], R) :-
+		member(H, T), !,
+		delete_duplicates(T, R).
+delete_duplicates([H|T], [H|R]) :-
+		delete_duplicates(T, R).
 
 %16. Inversează o listă incompletă.
 %?- reverse([1, 2, 3, 4, 5|_], R). 
 %R = [5, 4, 3, 2, 1|_]. 
 
+append_il(L, R, R):-var(L),!.
+append_il([H|T], L,[H|R]):-
+    append_il(T, L, R).
 
+reverse(L, _) :- var(L), !.
+reverse([H|T], R) :-
+    reverse(T, R_tail),
+    append_il(R_tail, [H|_], R).
+    
 
 %17. Inversați elementele dintr-o lista după poziția K.
 %?- reverse_k([1,2,3,4,5,6], 2, R). 
 %R = [1,2,6,5,4,3]. 
 
+reverse1([], Acc, Acc).
+reverse1([H|T], Acc, R) :-
+    Acc1=[H|Acc],
+    reverse1(T, Acc1, R).
+
+reverse1(L, R) :-
+    reverse1(L, [], R).
+
+reverse_k(L, 0, R) :-
+    reverse1(L, R), !.
+reverse_k([H|T], K, [H|R]) :-
+    New_K is K-1,
+    reverse_k(T, New_K, R).
 
 
 
@@ -218,8 +333,16 @@ replace_all(X, Y, [H|T], [H|R]) :-
 %?- rle_encode([a,a,a,a,b,c,c,a,a,d,e,e,e,e], R).
 %R = [[a,4], [b,1] ,[c,2], [a,2], [d,1] , [e,4]].
 
+rle_encode([], _, []).
 
+rle_encode([H,H|T], Cnt, R) :- !,
+    Cnt1 is Cnt+1,
+    rle_encode([H|T], Cnt1, R).
+rle_encode([H|T], Cnt, [[H,Cnt]|R]) :-
+    rle_encode(T, 1, R).
 
+rle_encode(L, R) :-
+    rle_encode(L, 1, R).
 
 %19. Codificați o listă cu RLE (Run-length encoding). Două sau mai multe elemente consecutive se
 %înlocuiesc cu [element, nr_apariții]. Dar dacă numărul de apariții este egal cu 1 atunci se
@@ -227,12 +350,36 @@ replace_all(X, Y, [H|T], [H|R]) :-
 %?- rle_encode1([1,1,1,2,3,3,4,4], R).
 %R = [[1,3], 2, [3,2], [4,2]]. 
 
+rle_encode1([], _, []).
+
+rle_encode1([H,H|T], Cnt, R) :- !,
+    Cnt1 is Cnt+1,
+    rle_encode1([H|T], Cnt1, R).
+rle_encode1([H|T], Cnt, [H|R]) :-
+    Cnt == 1, !, 
+    rle_encode1(T, 1, R).
+
+rle_encode1([H|T], Cnt, [[H,Cnt]|R]) :-
+    rle_encode1(T, 1, R).
+
+rle_encode1(L, R) :-
+    rle_encode1(L, 1, R).
 
 
 %20. Decodificați o listă cu RLE (Run-length encoding).
 %?- rle_decode([[a,4], [b,1] ,[c,2], [a,2], [d,1] , [e,4]],R). 
 %R = [a,a,a,a,b,c,c,a,a,d,e,e,e,e]. 
 
+get_list(_, 0, []) :- !.
+get_list(X, K, [X|R]) :-
+    New_K is K-1,
+    get_list(X, New_K, R).
+
+rle_decode([], []).
+rle_decode([[X, K]|T], R) :-
+    rle_decode(T, R1),
+    get_list(X, K, R2),
+    append(R2, R1, R).
 
 
 
