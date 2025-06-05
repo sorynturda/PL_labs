@@ -590,10 +590,10 @@ depth_tree(t(_,L,R), Depth) :-
     max(Depth1,Depth2, Tmp),
     Depth is Tmp+1.
 
-depth_tree(L, 0) :- var(L), !.
-depth_tree(t(_,L,R), Depth) :-
-    depth_tree(L, Depth1),
-    depth_tree(R, Depth2),
+depth_tree_il(L, 0) :- var(L), !.
+depth_tree_il(t(_,L,R), Depth) :-
+    depth_tree_il(L, Depth1),
+    depth_tree_il(R, Depth2),
     max(Depth1,Depth2, Tmp),
     Depth is Tmp+1.
 
@@ -744,7 +744,23 @@ tree_ex40(t(6, t(4, t(2, nil, nil), t(5, nil, nil)), t(9, t(7, nil, nil), nil)))
 
 tree_ex41(t(26,t(14,t(2,_,_),t(15,_,_)),t(50,t(35,t(29,_,_),_),t(51,_,t(58,_,_))))). 
 
+collect_all_odd_depth(T,R) :-
+    collect_all_odd_depth(T, 0, R).
 
+collect_all_odd_depth(T, _, []) :- var(T), !.
+
+collect_all_odd_depth(t(K,L,R), Cnt, [K|List]) :-
+    1 is Cnt mod 2, !,
+	Cnt1 is Cnt+1,
+    collect_all_odd_depth(L, Cnt1, LL),
+	collect_all_odd_depth(R, Cnt1, LR),
+    append(LL, LR, List).
+
+collect_all_odd_depth(t(_,L,R), Cnt, List) :-
+	Cnt1 is Cnt+1,
+    collect_all_odd_depth(L, Cnt1, LL),
+	collect_all_odd_depth(R, Cnt1, LR),
+	append(LL, LR, List).
 
 %42. Colectați subarborii cu rădăcini conținând valoarea mediană dintr-un arbore ternar incomplet.
 % Observație. Mediana este "mijlocul" listei sortate de chei
@@ -757,12 +773,25 @@ tree_ex41(t(26,t(14,t(2,_,_),t(15,_,_)),t(50,t(35,t(29,_,_),_),t(51,_,t(58,_,_))
 tree_ex42(t(2,t(8,_,_,_),t(3,_,_,t(1,_,_,_)),t(5,t(7,_,_,_),t(5,_,_,_),t(1,_,_,t(9,_,_,_))))). 
 
 
-
 %43. Înlocuiți fiecare nod cu înalțimea într-un arbore binar incomplet (frunzele au înalțimea 0) 
 %?- tree_ex43(T), height_each(T,R). 
 %R = tree_ex43(t(3,t(1,t(0,_,_),t(0,_,_)),t(2,t(1,t(0,_,_),_),t(1,_,t(0,_,_))))). 
 
+
 tree_ex43(t(2,t(4,t(5,_,_),t(7,_,_)),t(3,t(0,t(4,_,_),_),t(8,_,t(5,_,_))))). 
+
+
+height_each(T, R) :-
+    depth_tree_il(T,K),
+    K1 is K-1,
+    height_each(T, K1, R).
+
+height_each(T, _, _) :- var(T), !.
+
+height_each(t(_,L,R), H, t(H,LL,LR)) :-
+	H1 is H-1,
+    height_each(L, H1, LL),
+    height_each(R, H1, LR).
 
 
 %44. Scrieți un predicat care înlocuiește întregul subarbore al unui nod (cu o cheie dată ca
