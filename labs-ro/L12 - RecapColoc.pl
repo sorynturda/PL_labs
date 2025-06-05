@@ -269,11 +269,39 @@ replace_all(X, Y, [H|T], [H|R]) :-
 %?- depth_list([1, [2, [3]], [4]], R1), depth_list([], R2). 
 %R1 = 3, R2 = 1. 
 
+max(A, B, A) :-
+    A>B, !.
+max(_, B, B).
+
+depth_list([], 1).
+depth_list([H|T], R) :-
+    atomic(H), !,
+    depth_list(T, R).
+depth_list([H|T], R) :-
+    depth_list(H, R1), 
+    depth_list(T, R2),
+    R3 is R1 + 1,
+    max(R3, R2, R).
 
 
 %26. Aplatizați o listă imbricată cu liste complete/incomplete. 
 %?- flatten([[1|_], 2, [3, [4, 5|_]|_]|_], R). 
 %R = [1,2,3,4,5|_]. 
+
+append_il(L, R, R) :- var(L), !.
+append_il([H|T], L2, [H|R]) :-
+    append_il(T, L2, R).
+
+flatten(L, _) :- var(L), !.
+
+flatten([H|T], [H|R]) :-
+    atomic(H), !,
+    flatten(T, R).
+
+flatten([H|T], R) :-
+    flatten(H, R1),
+	flatten(T, R2),
+    append_il(R1, R2, R).
 
 
 
@@ -281,30 +309,104 @@ replace_all(X, Y, [H|T], [H|R]) :-
 %?- flatten_only_depth([[1,5,2,4],[1,[4,2],[5,[6,7,8]]],[4,[7]],8,[11]],3,R). 
 %R = [4,2,5,7]. 
 
+flatten_only_depth([], _, []).
+flatten_only_depth([H|T], 1, [H|R]) :-
+    atomic(H), !,
+    flatten_only_depth(T, 1, R).
+
+flatten_only_depth([H|T], K, R) :-
+    atomic(H), !,
+    flatten_only_depth(T, K, R).
+
+
+flatten_only_depth([H|T], K, R) :-
+    New_K is K-1,
+    flatten_only_depth(H, New_K, R1),
+    flatten_only_depth(T, K, R2),
+    append(R1, R2, R).
 
 
 %28. Calculați suma elementelor de la nivelul K intr-o lista imbricată. 
 %?- sum_k([1, [2, [3|_]|_], [4|_]|_], 2, R). 
 %R = 6. 
 
+sum_k(L, _, 0) :- var(L), !.
 
+sum_k([H|T], 1, R) :-
+    atomic(H), !,
+    sum_k(T, 1, R1),
+    R is H+R1.
+
+sum_k([H|T], K, R) :-
+    atomic(H), !,
+    sum_k(T, K, R).
+
+sum_k([H|T], K, R) :-
+    New_K is K-1,
+    sum_k(H, New_K, R1),
+    sum_k(T, K, R2),
+    R is R1+R2.
 
 %29. Calculați numărul de liste într-o listă imbricată.  
 %?- count_lists([[1,5,2,4],[1,[4,2],[5]],[4,[7]],8,[11]],R). 
 %R = 8. 
 
+count_lists_aux([], 0).
+count_lists_aux([H|T], R) :-
+    atomic(H), !,
+    count_lists_aux(T, R).
 
+count_lists_aux([H|T], R) :-
+    count_lists_aux(H, R1),
+    count_lists_aux(T, R2),
+    R is 1+R2+R1.
+
+count_lists(L, R) :-
+    count_lists_aux(L, R1),
+    R is 1+R1.
 
 %30. Înlocuiți toate aparițiile lui X cu Y în lista imbricată. 
 % ?- replace_all(2, 5, [[1, [2, [3, 2]], [4]], R). 
 %R = [1, [5, [3, 5]], [4]]. 
 
+replace_all(_,_,[],[]) :- !.
+replace_all(X, Y, [X|T], [Y|R]) :-
+    atomic(X), !,
+    replace_all(X,Y,T,R).
+
+replace_all(X,Y, [H|T], [H|R]) :-
+    atomic(H), !,
+    replace_all(X,Y,T,R).
+
+replace_all(X,Y,[H|T],R) :-
+    replace_all(X,Y,H,R1),
+    replace_all(X,Y,T,R2),
+    append([R1],R2,R).
 
 
 %31. Înlocuiți fiecare secvență cu o adâncime constantă cu lungimea într-o listă adâncă.
 %?- len_con_depth([[1,2,3],[2],[2,[2,3,1],5],3,1],R). 
 %R = [[3],[1],[1,[3],1],2]. 
 
+len_con_depth([], Cnt, [Cnt]).
+
+len_con_depth([H|T], Cnt, R) :-
+    atomic(H), !, 
+    Cnt1 is Cnt+1,
+    len_con_depth(T, Cnt1, R).
+
+len_con_depth([H|T], 0, R) :-
+    len_con_depth(H, 0, R1),
+    len_con_depth(T, 0, R2),
+    append([R1], R2, R).
+
+len_con_depth([H|T], Cnt, [Cnt|R]) :-
+    len_con_depth(H, 0, R1),
+    len_con_depth(T, 0, R2),
+    append([R1], R2, R).
+
+len_con_depth(L, R) :-
+    len_con_depth(L, 0, R).
 
 
 
@@ -317,8 +419,36 @@ replace_all(X, Y, [H|T], [H|R]) :-
 %R = 3. 
 
 tree_ex32(t(6, t(4, t(2, nil, nil), t(5, nil, nil)), t(9, t(7, nil, nil), nil))). 
+tree_ex32_i(t(6, t(4, t(2, _, _), t(5, _, _)), t(9, t(7, _, _), _))). 
 
+pretty_print(T):- pretty_print(T, 0).
 
+pretty_print(nil, _).
+pretty_print(t(K,L,R), D):- 
+    D1 is D+1,
+    pretty_print(L, D1),
+    print_key(K, D),
+    pretty_print(R, D1).
+
+print_key(K, D):-D>0, !, D1 is D-1, tab(8), print_key(K, D1).
+print_key(K, _):-write(K), nl.
+
+max(A, B, B) :- B>A, !.
+max(A, _, A).
+
+depth_tree(nil, 0).
+depth_tree(t(_,L,R), Depth) :-
+    depth_tree(L, Depth1),
+    depth_tree(R, Depth2),
+    max(Depth1,Depth2, Tmp),
+    Depth is Tmp+1.
+
+depth_tree(L, 0) :- var(L), !.
+depth_tree(t(_,L,R), Depth) :-
+    depth_tree(L, Depth1),
+    depth_tree(R, Depth2),
+    max(Depth1,Depth2, Tmp),
+    Depth is Tmp+1.
 
 
 %33. Colectați toate nodurile unui arbore binar complet/incomplet în inordine folosind liste complete. 
@@ -327,6 +457,27 @@ tree_ex32(t(6, t(4, t(2, nil, nil), t(5, nil, nil)), t(9, t(7, nil, nil), nil)))
 
 tree_ex33(t(6, t(4, t(2, nil, nil), t(5, nil, nil)), t(9, t(7, nil, nil), nil))). 
 
+% subarbore stâng, cheie și subarbore drept (ordinea din append)
+inorder(t(K,L,R), List):-
+    inorder(L,LL), 
+    inorder(R, LR),
+    append(LL, [K|LR],List).
+inorder(nil, []). 
+
+% cheie, subarbore stâng și subarbore drept (ordinea din append)
+preorder(t(K,L,R), List):-
+    preorder(L,LL), 
+    preorder(R, LR),
+    append([K|LL], LR, List).
+preorder(nil, []).
+
+% subarbore stâng, subarbore drept și apoi cheia (ordinea din append-uri)
+postorder(t(K,L,R), List):-
+    postorder(L,LL), 
+    postorder(R, LR),
+    append(LL, LR, R1), 
+    append(R1, [K], List).
+postorder(nil, []). 
 
 %34. Colectați toate frunzele dintr-un arbore binar
 %?- tree_ex34(T), collect_k(T, R). 
@@ -334,6 +485,14 @@ tree_ex33(t(6, t(4, t(2, nil, nil), t(5, nil, nil)), t(9, t(7, nil, nil), nil)))
 
 tree_ex34(t(6, t(4, t(2, nil, nil), t(5, nil, nil)), t(9, t(7, nil, nil), nil))). 
 
+collect_k(nil, []).
+
+collect_k(t(K,nil,nil), [K]) :- !.
+
+collect_k(t(_,L,R),List) :-
+    collect_k(L, LL),
+    collect_k(R, LR),
+    append(LL, LR, List).
 
 
 %35. Scrieți un predicat care verifică dacă un arbore este arbore binar de căutare.
@@ -341,8 +500,20 @@ tree_ex34(t(6, t(4, t(2, nil, nil), t(5, nil, nil)), t(9, t(7, nil, nil), nil)))
 %false.
 
 tree_ex35(t(3, t(2, t(1, nil, nil), t(4, nil, nil)), t(5, nil, nil))). 
+tree_ex35_bst(t(4, t(2, t(1, nil, nil), t(3, nil, nil)), t(5, nil, nil))).
 
+is_bst(nil).
 
+is_bst(t(K, L, R)) :-
+    is_bst(t(K, L, R), -inf, inf).
+
+is_bst(nil, _, _).
+
+is_bst(t(K, L, R), Min, Max) :-
+    K > Min,
+    K < Max,
+    is_bst(L, Min, K),
+    is_bst(R, K, Max).
 
 %36. Arbore binar imcomplet. Colectați nodurile impare cu un singur copil într-o listă incompletă.
 %?- tree_ex36(X), collect_odd_from_1child(X,R). 
@@ -350,7 +521,28 @@ tree_ex35(t(3, t(2, t(1, nil, nil), t(4, nil, nil)), t(5, nil, nil))).
 
 tree_ex36(t(26,t(14,t(2,_,_),t(15,_,_)),t(50,t(35,t(29,_,_),_),t(51,_,t(58,_,_))))). 
 
+collect_odd_from_1child(T, _) :- var(T), !.
 
+collect_odd_from_1child(t(K,L,R), [K|List]) :-
+    var(L),
+    nonvar(R), !,
+    1 is K mod 2,
+	collect_odd_from_1child(R, List).
+
+collect_odd_from_1child(t(K,L,R), [K|List]) :-
+    var(R),
+    nonvar(L), !,
+    1 is K mod 2,
+	collect_odd_from_1child(L, List).
+
+collect_odd_from_1child(t(_,L,R), List) :-
+    collect_odd_from_1child(L, LL),
+    collect_odd_from_1child(R, LR),
+    append_il(LL, LR, List).
+
+append_il(L, L2, L2) :- var(L),!.
+append_il([H|T], L2, [H|R]) :-
+    append_il(T,L2,R).
 
 %37. Arbore ternar incomplet. Colectați cheile între X și Y (interval închis) într-o listă diferență.
 %?- tree_ex37(T), collect_between(T,2,7,R,[1,18]). 
@@ -358,6 +550,21 @@ tree_ex36(t(26,t(14,t(2,_,_),t(15,_,_)),t(50,t(35,t(29,_,_),_),t(51,_,t(58,_,_))
 
 tree_ex37(t(2,t(8,_,_,_),t(3,_,_,t(4,_,_,_)),t(5,t(7,_,_,_),t(6,_,_,_),t(1,_,_,t(9,_,_,_))))). 
 
+collect_between(T, _, _, LE, LE) :- var(T), !.
+
+% Cazul când cheia este în intervalul [X,Y]
+collect_between(t(K,L,M,R), X, Y, LS, LE) :-
+    K =< Y,
+    K >= X, !,
+    collect_between(L, X, Y, LS, [K|LE1]),
+    collect_between(M, X, Y, LE1, LE2),
+    collect_between(R, X, Y, LE2, LE).
+
+% Cazul când cheia nu este în intervalul [X,Y]
+collect_between(t(_,L,M,R), X, Y, LS, LE) :-
+    collect_between(L, X, Y, LS, LE1),
+    collect_between(M, X, Y, LE1, LE2),
+    collect_between(R, X, Y, LE2, LE).
 
 
 %38. Arbore binar. Colectați cheile pare ale frunzelor într-o listă diferență. 
